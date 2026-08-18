@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coordinate System Converter</title>
+  <style>
+    :root{--ink:#172229;--muted:#67747a;--line:#dce3e1;--paper:#fbfcfa;--green:#1a6a59;--mint:#e4f0eb;--sand:#f2f0e9;--warn:#865a22;--warnbg:#fff7e9;--warnline:#ecdab9}
+    *{box-sizing:border-box} body{color:var(--ink);background:var(--paper);margin:0;font-family:Arial,Helvetica,sans-serif} button,input,select,textarea{font:inherit}.app-shell{min-height:100vh}
+    .topbar{border-bottom:1px solid var(--line);background:#fbfcfaf5;justify-content:space-between;align-items:center;height:70px;padding:0 clamp(24px,5vw,76px);display:flex}.brand{letter-spacing:-.2px;align-items:center;gap:11px;font-size:15px;font-weight:700;display:flex}.brand-mark{color:#fff;background:var(--green);border-radius:7px;place-items:center;width:27px;height:27px;font-family:Georgia,serif;font-size:18px;display:grid}.internal{color:var(--muted);align-items:center;gap:7px;font-size:13px;display:flex}.internal-dot{background:#4f9975;border-radius:50%;width:7px;height:7px}
+    .hero{background:var(--sand);border-bottom:1px solid var(--line);padding:74px clamp(24px,12vw,184px) 67px}.eyebrow,.section-label{color:var(--green);letter-spacing:1.35px;text-transform:uppercase;font-size:11px;font-weight:800}.hero h1{letter-spacing:-2.7px;max-width:740px;margin:14px 0 18px;font:700 clamp(39px,5.1vw,72px)/.98 Georgia,"Times New Roman",serif}.hero p{color:#516066;max-width:700px;margin:0;font-size:18px;line-height:1.55}
+    .workspace{grid-template-columns:208px minmax(0,760px) 285px;align-items:start;gap:36px;max-width:1340px;margin:0 auto;padding:52px 30px 85px;display:grid}.steps{padding-top:19px}.step{color:#899498;gap:11px;padding:0 0 30px;display:flex;position:relative}.step:before{content:"";border-left:1px solid #d5ddda;height:calc(100% - 21px);position:absolute;top:26px;left:12px}.step:last-child:before{display:none}.step span{background:var(--paper);z-index:1;border:1px solid #cbd4d1;border-radius:50%;flex:0 0 25px;place-items:center;width:25px;height:25px;font-size:11px;font-weight:700;display:grid}.step.active{color:var(--ink)}.step.active span{background:var(--green);color:#fff;border-color:var(--green)}.step strong{margin:2px 0 5px;font-size:13px;display:block}.step small{color:#879296;font-size:11px;line-height:1.35;display:block}
+    .form-area{gap:22px;display:grid}.form-card,.review-card,.summary{border:1px solid var(--line);background:#fff;border-radius:12px}.form-card{padding:29px 30px 31px}.form-card h2,.review-card h2{letter-spacing:-.65px;margin:11px 0 8px;font:700 26px/1.15 Georgia,"Times New Roman",serif}.section-copy{color:var(--muted);max-width:640px;margin:0 0 20px;font-size:13px;line-height:1.55}
+    .tabs{display:flex;gap:8px;margin-bottom:14px}.tab{cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:6px;padding:8px 12px;color:#5e6a6d;font-size:12px;font-weight:700}.tab.active{border-color:var(--green);color:var(--green);background:#f4faf6}.hidden{display:none!important}.hidden-input{display:none}
+    .dropzone{cursor:pointer;text-align:center;color:#66747a;background:#fbfdfb;border:1.5px dashed #aabbb5;border-radius:8px;flex-direction:column;justify-content:center;align-items:center;gap:6px;width:100%;min-height:145px;transition:all .15s;display:flex}.dropzone:hover,.dropzone.dragging{border-color:var(--green);background:#f2f8f4}.dropzone strong{color:var(--ink);font-size:14px}.dropzone small{color:#849094;margin-top:6px;font-size:12px}.upload-arrow{color:var(--green);height:31px;font-size:28px;line-height:26px}.uploaded-name{color:var(--ink);font-weight:700;font-size:14px}.replace-file{color:var(--green);margin-top:6px;font-weight:700;font-size:12px}
+    textarea{width:100%;min-height:175px;border:1px solid #cfd9d5;border-radius:7px;padding:13px 14px;resize:vertical;color:var(--ink);background:#fff;font:12px/1.55 Consolas,"Courier New",monospace}textarea:focus,select:focus,input:focus{outline:2px solid #b9d7c9;outline-offset:1px;border-color:var(--green)}
+    .sample-row{display:flex;justify-content:space-between;gap:12px;margin-top:9px;color:#7a8682;font-size:11px}.link-button{border:0;background:transparent;color:var(--green);cursor:pointer;padding:0;font-weight:700}
+    .select-grid{grid-template-columns:1fr 1fr;gap:18px;margin-top:17px;display:grid}.select-grid label,.field-label{color:#4f5c61;font-size:12px;font-weight:700}.select-grid select,.column-grid select{appearance:none;width:100%;height:43px;color:var(--ink);background:linear-gradient(45deg,#0000 50%,#5e6c69 50%) calc(100% - 17px) 18px/5px 5px no-repeat,linear-gradient(135deg,#5e6c69 50%,#0000 50%) calc(100% - 12px) 18px/5px 5px no-repeat,#fff;border:1px solid #cfd9d5;border-radius:6px;margin-top:7px;padding:0 35px 0 12px;font-size:12px}.wide-select{grid-column:span 2}.column-grid{grid-template-columns:1fr 1fr auto;gap:14px;align-items:end;margin-top:19px;display:grid}.swap-button{height:43px;border:1px solid #cfd9d5;background:#fff;border-radius:6px;padding:0 13px;cursor:pointer;color:var(--green);font-size:12px;font-weight:700}.swap-button:hover{background:#f4faf6}
+    .data-preview{border:1px solid var(--line);border-radius:8px;overflow:auto;max-height:260px;margin-top:18px}.data-preview table,.results-table{border-collapse:collapse;width:100%;font-size:11px;white-space:nowrap}.data-preview th,.data-preview td,.results-table th,.results-table td{border-bottom:1px solid #edf0ee;border-right:1px solid #edf0ee;padding:8px 9px;text-align:left}.data-preview th,.results-table th{position:sticky;top:0;background:#f5f8f6;z-index:1;color:#53615d;font-weight:700}.data-preview tr:last-child td,.results-table tr:last-child td{border-bottom:0}.data-preview th:last-child,.data-preview td:last-child,.results-table th:last-child,.results-table td:last-child{border-right:0}.empty-preview{padding:26px;color:#88948f;text-align:center;font-size:12px}
+    .projection-note{color:#426158;background:#f5faf7;border:1px solid #d6e3dc;border-radius:7px;margin-top:16px;padding:12px 13px;font-size:12px;line-height:1.45}.notice{color:var(--warn);background:var(--warnbg);border:1px solid var(--warnline);border-radius:7px;padding:12px 14px;font-size:12px;line-height:1.45;margin-top:14px}.error-notice{color:#8a3830;background:#fff2f0;border-color:#ebc9c5}.checkbox-row{display:flex;align-items:center;gap:8px;margin-top:15px;color:#53605d;font-size:12px}.checkbox-row input{accent-color:var(--green)}
+    .review-card{background:#eef5f0;border-color:#cfddd5;justify-content:space-between;align-items:center;gap:20px;padding:25px 29px;display:flex}.review-card h2{margin:8px 0 5px;font-size:23px}.review-card p{color:#5d6d68;max-width:420px;margin:0;font-size:12px;line-height:1.45}.primary-button{background:var(--green);color:#fff;cursor:pointer;border:0;border-radius:6px;flex:none;padding:13px 18px;font-size:12px;font-weight:700;box-shadow:0 2px #00000014}.primary-button:hover{background:#135746}.primary-button:disabled{background:#8aaaa1;cursor:not-allowed}.secondary-button{background:#fff;color:var(--green);cursor:pointer;border:1px solid #bdd0c8;border-radius:6px;padding:10px 13px;font-size:12px;font-weight:700}
+    .results-card{padding:0;overflow:hidden}.results-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 22px;border-bottom:1px solid var(--line)}.results-head h2{margin:0;font:700 22px/1.15 Georgia,"Times New Roman",serif}.results-actions{display:flex;gap:8px}.results-wrap{overflow:auto;max-height:420px}.result-error{color:#983d35}
+    .summary{position:sticky;top:20px;overflow:hidden}.summary-head{border-bottom:1px solid var(--line);justify-content:space-between;padding:17px 18px;font-size:12px;font-weight:700;display:flex}.status-pill{color:#68736f;background:#f0f2ef;border-radius:10px;padding:3px 7px;font-size:10px}.summary-file{color:#556167;overflow-wrap:anywhere;min-height:72px;padding:17px 18px;font-size:12px;line-height:1.45}.summary-file strong{display:block;color:var(--ink);margin-bottom:5px}.summary-divider{border-top:1px solid var(--line)}.summary-row{color:var(--muted);justify-content:space-between;gap:10px;padding:11px 18px;font-size:11px;display:flex}.summary-row strong{color:var(--ink);text-align:right;font-size:11px}.checklist{padding:16px 18px 14px}.checklist h3{text-transform:uppercase;letter-spacing:1px;color:#71807a;margin:0 0 12px;font-size:11px}.checklist div{color:#55635f;align-items:flex-start;gap:8px;margin:9px 0;font-size:11px;line-height:1.35;display:flex}.checklist div span{width:15px;height:15px;color:var(--green);background:#d9ecdf;border-radius:50%;flex:0 0 15px;place-items:center;font-size:10px;font-weight:800;display:inline-grid}.privacy-note{color:#85908d;margin:0;padding:12px 18px 17px;font-size:10px;line-height:1.4;border-top:1px solid var(--line)}
+    @media (max-width:1050px){.workspace{grid-template-columns:170px minmax(0,1fr);max-width:940px}.summary{grid-column:2;position:static}}@media (max-width:700px){.topbar{height:59px}.internal{display:none}.brand{font-size:13px}.hero{padding:48px 24px 44px}.hero h1{letter-spacing:-1.8px;font-size:43px}.hero p{font-size:16px}.workspace{padding:28px 18px 50px;display:block}.steps{display:none}.form-area{gap:14px}.form-card{padding:24px 19px}.select-grid,.column-grid{grid-template-columns:1fr}.wide-select{grid-column:auto}.review-card{padding:22px 19px;display:block}.primary-button{width:100%;margin-top:18px}.summary{margin-top:16px}.results-head{align-items:flex-start;flex-direction:column}.results-actions{width:100%}.results-actions button{flex:1}}
+  </style>
+</head>
+<body>
+<main class="app-shell">
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">C</span><span>Coordinate System Converter</span></div>
+    <div class="internal"><span class="internal-dot"></span> Internal tool</div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Coordinate conversion</div>
+    <h1>Convert coordinate lists<br>without GIS software.</h1>
+    <p>Paste coordinates from Excel or upload a CSV, choose the source and destination coordinate systems, then download the converted table.</p>
+  </section>
+
+  <section class="workspace">
+    <aside class="steps">
+      <div class="step active"><span>1</span><div><strong>Add coordinates</strong><small>Paste a table or upload a CSV.</small></div></div>
+      <div class="step active"><span>2</span><div><strong>Choose systems</strong><small>Select the source and output CRS.</small></div></div>
+      <div class="step active"><span>3</span><div><strong>Map columns</strong><small>Identify X/Easting and Y/Northing.</small></div></div>
+      <div class="step active"><span>4</span><div><strong>Convert</strong><small>Review and download the output.</small></div></div>
+    </aside>
+
+    <div class="form-area">
+      <section class="form-card">
+        <div class="section-label">01 &nbsp; Add coordinate data</div>
+        <h2>Paste a table or upload a CSV.</h2>
+        <p class="section-copy">Copy directly from Excel, including the header row. Extra columns such as Point, Name, Legal Location, or Notes are preserved in the output.</p>
+        <div class="tabs">
+          <button class="tab active" id="pasteTab" type="button">Paste from Excel</button>
+          <button class="tab" id="uploadTab" type="button">Upload CSV</button>
+        </div>
+        <div id="pastePane">
+          <textarea id="pasteInput" spellcheck="false" placeholder="Point\tEasting\tNorthing&#10;FB26-133\t504129.86\t6350567.32&#10;FB26-138\t503070.82\t6348390.23"></textarea>
+          <div class="sample-row"><span>Tab, comma, or semicolon separated tables are accepted.</span><button class="link-button" id="loadSample" type="button">Load example</button></div>
+        </div>
+        <div id="uploadPane" class="hidden">
+          <input class="hidden-input" type="file" id="fileInput" accept=".csv,.txt" />
+          <label class="dropzone" id="dropzone" for="fileInput">
+            <span class="upload-arrow">↑</span>
+            <strong id="fileLabel">Drop a CSV here or click to browse</strong>
+            <small>CSV or TXT table. The first row should contain column names.</small>
+          </label>
+        </div>
+        <div id="parseNotice" class="notice error-notice hidden"></div>
+        <div class="data-preview" id="inputPreview"><div class="empty-preview">No coordinate table loaded yet.</div></div>
+      </section>
+
+      <section class="form-card">
+        <div class="section-label">02 &nbsp; Coordinate systems</div>
+        <h2>Choose the source and destination.</h2>
+        <p class="section-copy">The coordinate system names and EPSG codes are shown together so they match what you see in ArcGIS Pro.</p>
+        <div class="select-grid">
+          <label>Source coordinate system
+            <select id="sourceCrs"></select>
+          </label>
+          <label>Output coordinate system
+            <select id="targetCrs"></select>
+          </label>
+        </div>
+        <div class="projection-note" id="projectionNote">Conversions between projected systems on the same datum use the listed projection parameters. Cross-datum conversions are handled as coordinate-system conversions without a high-accuracy datum transformation grid.</div>
+        <div class="notice hidden" id="datumWarning"></div>
+      </section>
+
+      <section class="form-card">
+        <div class="section-label">03 &nbsp; Coordinate columns</div>
+        <h2>Tell the converter which columns contain the coordinates.</h2>
+        <p class="section-copy">For projected systems, X is Easting and Y is Northing. For geographic systems, X is Longitude and Y is Latitude.</p>
+        <div class="column-grid">
+          <label class="field-label">X / Easting / Longitude
+            <select id="xColumn"><option value="">Load data first</option></select>
+          </label>
+          <label class="field-label">Y / Northing / Latitude
+            <select id="yColumn"><option value="">Load data first</option></select>
+          </label>
+          <button class="swap-button" id="swapColumns" type="button">Swap X / Y</button>
+        </div>
+        <label class="checkbox-row"><input type="checkbox" id="includeDms" checked /> Include DMS columns when the output is geographic</label>
+      </section>
+
+      <section class="review-card">
+        <div><div class="section-label">04 &nbsp; Convert coordinates</div><h2 id="readyTitle">Add a coordinate table to continue.</h2><p id="readyCopy">Your original columns will be preserved. Converted coordinate columns are added to a new downloadable CSV.</p></div>
+        <button class="primary-button" id="convertButton" type="button" disabled>Convert coordinates <span>→</span></button>
+      </section>
+
+      <section class="form-card results-card hidden" id="resultsCard">
+        <div class="results-head">
+          <div><div class="section-label">Converted output</div><h2 id="resultsTitle">Conversion complete</h2></div>
+          <div class="results-actions"><button class="secondary-button" id="copyResults" type="button">Copy table</button><button class="primary-button" id="downloadCsv" type="button">Download CSV</button></div>
+        </div>
+        <div class="results-wrap" id="resultsWrap"></div>
+      </section>
+    </div>
+
+    <aside class="summary">
+      <div class="summary-head"><span>Conversion summary</span><span class="status-pill" id="statusPill">Waiting</span></div>
+      <div class="summary-file"><strong id="summaryInput">No data loaded</strong><span id="summarySub">Paste coordinates or upload a CSV.</span></div>
+      <div class="summary-divider"></div>
+      <div class="summary-row"><span>Rows</span><strong id="summaryRows">0</strong></div>
+      <div class="summary-row"><span>Source</span><strong id="summarySource">Not selected</strong></div>
+      <div class="summary-row"><span>Output</span><strong id="summaryTarget">Not selected</strong></div>
+      <div class="summary-row"><span>X column</span><strong id="summaryX">Not set</strong></div>
+      <div class="summary-row"><span>Y column</span><strong id="summaryY">Not set</strong></div>
+      <div class="summary-divider"></div>
+      <div class="checklist"><h3>Included systems</h3><div><span>✓</span>Alberta 10TM Forest and Resource</div><div><span>✓</span>Alberta 3TM reference meridians</div><div><span>✓</span>NAD83 and NAD83(CSRS) UTM</div><div><span>✓</span>WGS84 UTM and Lat/Long</div></div>
+      <p class="privacy-note">All coordinate processing happens in your browser. This page does not upload the coordinate table to a server.</p>
+    </aside>
+  </section>
+</main>
+<script>
+(() => {
+  const GRS80 = {a: 6378137.0, rf: 298.257222101};
+  const WGS84 = {a: 6378137.0, rf: 298.257223563};
+  const crs = [
+    {group:'Geographic', code:'EPSG:4326', name:'WGS 84', type:'geographic', datum:'WGS84', ellipsoid:WGS84},
+    {group:'Geographic', code:'EPSG:4269', name:'NAD83', type:'geographic', datum:'NAD83', ellipsoid:GRS80},
+    {group:'Geographic', code:'EPSG:4617', name:'NAD83(CSRS)', type:'geographic', datum:'NAD83_CSRS', ellipsoid:GRS80},
+
+    {group:'Alberta 10TM', code:'EPSG:3400', name:'NAD83 / Alberta 10-TM (Forest)', type:'tm', datum:'NAD83', ellipsoid:GRS80, lon0:-115, lat0:0, k0:0.9992, x0:500000, y0:0},
+    {group:'Alberta 10TM', code:'EPSG:3401', name:'NAD83 / Alberta 10-TM (Resource)', type:'tm', datum:'NAD83', ellipsoid:GRS80, lon0:-115, lat0:0, k0:0.9992, x0:0, y0:0},
+    {group:'Alberta 10TM', code:'EPSG:3402', name:'NAD83(CSRS) / Alberta 10-TM (Forest)', type:'tm', datum:'NAD83_CSRS', ellipsoid:GRS80, lon0:-115, lat0:0, k0:0.9992, x0:500000, y0:0},
+    {group:'Alberta 10TM', code:'EPSG:3403', name:'NAD83(CSRS) / Alberta 10-TM (Resource)', type:'tm', datum:'NAD83_CSRS', ellipsoid:GRS80, lon0:-115, lat0:0, k0:0.9992, x0:0, y0:0},
+
+    {group:'Alberta 3TM - NAD83', code:'EPSG:3775', name:'NAD83 / Alberta 3TM ref merid 111 W', type:'tm', datum:'NAD83', ellipsoid:GRS80, lon0:-111, lat0:0, k0:0.9999, x0:0, y0:0},
+    {group:'Alberta 3TM - NAD83', code:'EPSG:3776', name:'NAD83 / Alberta 3TM ref merid 114 W', type:'tm', datum:'NAD83', ellipsoid:GRS80, lon0:-114, lat0:0, k0:0.9999, x0:0, y0:0},
+    {group:'Alberta 3TM - NAD83', code:'EPSG:3777', name:'NAD83 / Alberta 3TM ref merid 117 W', type:'tm', datum:'NAD83', ellipsoid:GRS80, lon0:-117, lat0:0, k0:0.9999, x0:0, y0:0},
+    {group:'Alberta 3TM - NAD83', code:'EPSG:3801', name:'NAD83 / Alberta 3TM ref merid 120 W', type:'tm', datum:'NAD83', ellipsoid:GRS80, lon0:-120, lat0:0, k0:0.9999, x0:0, y0:0},
+    {group:'Alberta 3TM - NAD83(CSRS)', code:'EPSG:3779', name:'NAD83(CSRS) / Alberta 3TM ref merid 111 W', type:'tm', datum:'NAD83_CSRS', ellipsoid:GRS80, lon0:-111, lat0:0, k0:0.9999, x0:0, y0:0},
+    {group:'Alberta 3TM - NAD83(CSRS)', code:'EPSG:3780', name:'NAD83(CSRS) / Alberta 3TM ref merid 114 W', type:'tm', datum:'NAD83_CSRS', ellipsoid:GRS80, lon0:-114, lat0:0, k0:0.9999, x0:0, y0:0},
+    {group:'Alberta 3TM - NAD83(CSRS)', code:'EPSG:3781', name:'NAD83(CSRS) / Alberta 3TM ref merid 117 W', type:'tm', datum:'NAD83_CSRS', ellipsoid:GRS80, lon0:-117, lat0:0, k0:0.9999, x0:0, y0:0},
+    {group:'Alberta 3TM - NAD83(CSRS)', code:'EPSG:3802', name:'NAD83(CSRS) / Alberta 3TM ref merid 120 W', type:'tm', datum:'NAD83_CSRS', ellipsoid:GRS80, lon0:-120, lat0:0, k0:0.9999, x0:0, y0:0},
+  ];
+  for (let z=10; z<=15; z++) crs.push({group:'UTM - NAD83', code:`EPSG:${26900+z}`, name:`NAD83 / UTM zone ${z}N`, type:'tm', datum:'NAD83', ellipsoid:GRS80, lon0:6*z-183, lat0:0, k0:0.9996, x0:500000, y0:0});
+  const csrsUtmCodes={10:3157,11:2955,12:2956,13:2957,14:3158,15:3159};
+  for (let z=10; z<=15; z++) crs.push({group:'UTM - NAD83(CSRS)', code:`EPSG:${csrsUtmCodes[z]}`, name:`NAD83(CSRS) / UTM zone ${z}N`, type:'tm', datum:'NAD83_CSRS', ellipsoid:GRS80, lon0:6*z-183, lat0:0, k0:0.9996, x0:500000, y0:0});
+  for (let z=10; z<=15; z++) crs.push({group:'UTM - WGS 84', code:`EPSG:${32600+z}`, name:`WGS 84 / UTM zone ${z}N`, type:'tm', datum:'WGS84', ellipsoid:WGS84, lon0:6*z-183, lat0:0, k0:0.9996, x0:500000, y0:0});
+
+  const $ = id => document.getElementById(id);
+  const state={headers:[], rows:[], sourceName:'', resultHeaders:[], resultRows:[]};
+  const els={pasteTab:$('pasteTab'),uploadTab:$('uploadTab'),pastePane:$('pastePane'),uploadPane:$('uploadPane'),pasteInput:$('pasteInput'),fileInput:$('fileInput'),dropzone:$('dropzone'),fileLabel:$('fileLabel'),parseNotice:$('parseNotice'),inputPreview:$('inputPreview'),sourceCrs:$('sourceCrs'),targetCrs:$('targetCrs'),xColumn:$('xColumn'),yColumn:$('yColumn'),swapColumns:$('swapColumns'),includeDms:$('includeDms'),datumWarning:$('datumWarning'),convertButton:$('convertButton'),readyTitle:$('readyTitle'),resultsCard:$('resultsCard'),resultsTitle:$('resultsTitle'),resultsWrap:$('resultsWrap'),copyResults:$('copyResults'),downloadCsv:$('downloadCsv'),statusPill:$('statusPill'),summaryInput:$('summaryInput'),summarySub:$('summarySub'),summaryRows:$('summaryRows'),summarySource:$('summarySource'),summaryTarget:$('summaryTarget'),summaryX:$('summaryX'),summaryY:$('summaryY')};
+
+  function populateCrs(select, defaultCode){
+    const groups={}; crs.forEach(c=>{(groups[c.group] ||= []).push(c)});
+    select.innerHTML='';
+    Object.entries(groups).forEach(([g,items])=>{const og=document.createElement('optgroup');og.label=g;items.forEach(c=>{const o=document.createElement('option');o.value=c.code;o.textContent=`${c.code}  ${c.name}`;if(c.code===defaultCode)o.selected=true;og.appendChild(o)});select.appendChild(og)});
+  }
+  populateCrs(els.sourceCrs,'EPSG:3400'); populateCrs(els.targetCrs,'EPSG:4326');
+  const getCrs=code=>crs.find(c=>c.code===code);
+
+  function switchTab(which){const paste=which==='paste';els.pasteTab.classList.toggle('active',paste);els.uploadTab.classList.toggle('active',!paste);els.pastePane.classList.toggle('hidden',!paste);els.uploadPane.classList.toggle('hidden',paste)}
+  els.pasteTab.onclick=()=>switchTab('paste'); els.uploadTab.onclick=()=>switchTab('upload');
+
+  function detectDelimiter(text){const first=(text.split(/\r?\n/).find(l=>l.trim())||''); if(first.includes('\t'))return '\t'; const commas=(first.match(/,/g)||[]).length, semis=(first.match(/;/g)||[]).length; return semis>commas?';':','}
+  function parseDelimitedLine(line, delim){
+    if(delim==='\t') return line.split('\t').map(v=>v.trim());
+    const out=[];let cur='',quoted=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){if(quoted&&line[i+1]==='"'){cur+='"';i++}else quoted=!quoted}else if(ch===delim&&!quoted){out.push(cur.trim());cur=''}else cur+=ch}out.push(cur.trim());return out;
+  }
+  function looksNumeric(v){if(v==null||String(v).trim()==='')return false; const n=Number(String(v).trim().replace(/,/g,'')); return Number.isFinite(n)}
+  function parseTable(text, name='Pasted table'){
+    hideNotice(); const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim().length); if(!lines.length){clearData();return}
+    const delim=detectDelimiter(text); let parsed=lines.map(l=>parseDelimitedLine(l,delim)); const width=Math.max(...parsed.map(r=>r.length)); parsed=parsed.map(r=>{while(r.length<width)r.push('');return r});
+    let headers; const first=parsed[0]; const hasHeader=first.some(v=>!looksNumeric(v));
+    if(hasHeader){headers=first.map((v,i)=>v||`Column_${i+1}`);parsed=parsed.slice(1)} else headers=Array.from({length:width},(_,i)=>`Column_${i+1}`);
+    const seen={}; headers=headers.map((h,i)=>{let base=h.trim()||`Column_${i+1}`;let n=(seen[base]||0)+1;seen[base]=n;return n===1?base:`${base}_${n}`});
+    state.headers=headers; state.rows=parsed.filter(r=>r.some(v=>String(v).trim()!=='')); state.sourceName=name; populateColumns(); renderInputPreview(); updateSummary(); els.resultsCard.classList.add('hidden'); updateReady();
+  }
+  function clearData(){state.headers=[];state.rows=[];state.sourceName='';populateColumns();els.inputPreview.innerHTML='<div class="empty-preview">No coordinate table loaded yet.</div>';updateSummary();updateReady()}
+  function showNotice(msg){els.parseNotice.textContent=msg;els.parseNotice.classList.remove('hidden')} function hideNotice(){els.parseNotice.classList.add('hidden');els.parseNotice.textContent=''}
+
+  let pasteTimer; els.pasteInput.addEventListener('input',()=>{clearTimeout(pasteTimer);pasteTimer=setTimeout(()=>parseTable(els.pasteInput.value,'Pasted table'),250)});
+  $('loadSample').onclick=()=>{els.pasteInput.value='Point\tEasting\tNorthing\nFB26-133\t504129.86\t6350567.32\nFB26-138\t503070.82\t6348390.23\nFB26-139\t503380.44\t6348666.00';parseTable(els.pasteInput.value,'Example table')};
+  function handleFile(file){if(!file)return; if(!/\.(csv|txt)$/i.test(file.name)){showNotice('Use a CSV or TXT table for this version. You can also copy the table directly from Excel and paste it into the page.');return}const reader=new FileReader();reader.onload=()=>{els.fileLabel.textContent=file.name;parseTable(String(reader.result||''),file.name)};reader.onerror=()=>showNotice('The file could not be read.');reader.readAsText(file)}
+  els.fileInput.onchange=e=>handleFile(e.target.files[0]); ['dragenter','dragover'].forEach(ev=>els.dropzone.addEventListener(ev,e=>{e.preventDefault();els.dropzone.classList.add('dragging')})); ['dragleave','drop'].forEach(ev=>els.dropzone.addEventListener(ev,e=>{e.preventDefault();els.dropzone.classList.remove('dragging')})); els.dropzone.addEventListener('drop',e=>handleFile(e.dataTransfer.files[0]));
+
+  function findBestColumn(kind){const patterns=kind==='x'?[/^easting$/i,/^east$/i,/^x$/i,/^longitude$/i,/^lon$/i,/easting/i,/longitude/i]:[/^northing$/i,/^north$/i,/^y$/i,/^latitude$/i,/^lat$/i,/northing/i,/latitude/i];for(const p of patterns){const i=state.headers.findIndex(h=>p.test(h.trim()));if(i>=0)return i}return kind==='x'?0:Math.min(1,state.headers.length-1)}
+  function populateColumns(){[els.xColumn,els.yColumn].forEach(s=>{s.innerHTML='';if(!state.headers.length){s.innerHTML='<option value="">Load data first</option>';return}state.headers.forEach((h,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=h;s.appendChild(o)})});if(state.headers.length){els.xColumn.value=String(findBestColumn('x'));els.yColumn.value=String(findBestColumn('y'))}}
+  els.swapColumns.onclick=()=>{if(!state.headers.length)return;const a=els.xColumn.value;els.xColumn.value=els.yColumn.value;els.yColumn.value=a;updateSummary()};
+  [els.xColumn,els.yColumn,els.sourceCrs,els.targetCrs].forEach(e=>e.addEventListener('change',()=>{updateSummary();updateReady();updateDatumWarning()}));
+
+  function renderInputPreview(){if(!state.rows.length){els.inputPreview.innerHTML='<div class="empty-preview">No coordinate rows found.</div>';return}const max=6;let html='<table><thead><tr>'+state.headers.map(h=>`<th>${escapeHtml(h)}</th>`).join('')+'</tr></thead><tbody>';state.rows.slice(0,max).forEach(r=>{html+='<tr>'+state.headers.map((_,i)=>`<td>${escapeHtml(r[i]??'')}</td>`).join('')+'</tr>'});html+='</tbody></table>';if(state.rows.length>max)html+=`<div class="empty-preview">Previewing ${max} of ${state.rows.length} rows.</div>`;els.inputPreview.innerHTML=html}
+  function escapeHtml(s){return String(s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]))}
+  function shortName(c){return c?`${c.code.replace('EPSG:','')} ${c.name}`:'Not selected'}
+  function updateSummary(){const src=getCrs(els.sourceCrs.value),tgt=getCrs(els.targetCrs.value);els.summaryInput.textContent=state.sourceName||'No data loaded';els.summarySub.textContent=state.rows.length?`${state.headers.length} columns detected`:'Paste coordinates or upload a CSV.';els.summaryRows.textContent=String(state.rows.length);els.summarySource.textContent=shortName(src);els.summaryTarget.textContent=shortName(tgt);els.summaryX.textContent=state.headers[Number(els.xColumn.value)]||'Not set';els.summaryY.textContent=state.headers[Number(els.yColumn.value)]||'Not set'}
+  function updateReady(){const ok=state.rows.length>0&&els.xColumn.value!==''&&els.yColumn.value!==''&&els.xColumn.value!==els.yColumn.value;els.convertButton.disabled=!ok;els.readyTitle.textContent=ok?`${state.rows.length} coordinate row${state.rows.length===1?'':'s'} ready to convert.`:'Add a coordinate table to continue.';els.statusPill.textContent=ok?'Ready':'Waiting'}
+  function updateDatumWarning(){const s=getCrs(els.sourceCrs.value),t=getCrs(els.targetCrs.value);if(s&&t&&s.datum!==t.datum){els.datumWarning.textContent='Datum note: the source and output use different datums. This browser tool does not apply NADCON/NTv2 or time-dependent datum transformation grids. Use ArcGIS Pro with the appropriate geographic transformation when survey-grade or sub-metre datum accuracy matters.';els.datumWarning.classList.remove('hidden')}else els.datumWarning.classList.add('hidden')}
+
+  function ellipsoidParams(ell){const f=1/ell.rf;const e2=f*(2-f);return {a:ell.a,f,e2,ep2:e2/(1-e2)}}
+  function meridionalArc(phi,p){const {a,e2}=p;const e4=e2*e2,e6=e4*e2;return a*((1-e2/4-3*e4/64-5*e6/256)*phi-(3*e2/8+3*e4/32+45*e6/1024)*Math.sin(2*phi)+(15*e4/256+45*e6/1024)*Math.sin(4*phi)-(35*e6/3072)*Math.sin(6*phi))}
+  function forwardTM(lonDeg,latDeg,c){const p=ellipsoidParams(c.ellipsoid),rad=Math.PI/180;const phi=latDeg*rad,lam=lonDeg*rad,lam0=c.lon0*rad,phi0=(c.lat0||0)*rad;const sin=Math.sin(phi),cos=Math.cos(phi),tan=Math.tan(phi);const N=p.a/Math.sqrt(1-p.e2*sin*sin),T=tan*tan,C=p.ep2*cos*cos,A=cos*(lam-lam0);const M=meridionalArc(phi,p),M0=meridionalArc(phi0,p);const x=c.x0+c.k0*N*(A+(1-T+C)*A**3/6+(5-18*T+T*T+72*C-58*p.ep2)*A**5/120);const y=c.y0+c.k0*((M-M0)+N*tan*(A*A/2+(5-T+9*C+4*C*C)*A**4/24+(61-58*T+T*T+600*C-330*p.ep2)*A**6/720));return [x,y]}
+  function inverseTM(x,y,c){const p=ellipsoidParams(c.ellipsoid),rad=Math.PI/180;const M0=meridionalArc((c.lat0||0)*rad,p),M=M0+(y-c.y0)/c.k0;const mu=M/(p.a*(1-p.e2/4-3*p.e2**2/64-5*p.e2**3/256));const e1=(1-Math.sqrt(1-p.e2))/(1+Math.sqrt(1-p.e2));const phi1=mu+(3*e1/2-27*e1**3/32)*Math.sin(2*mu)+(21*e1**2/16-55*e1**4/32)*Math.sin(4*mu)+(151*e1**3/96)*Math.sin(6*mu)+(1097*e1**4/512)*Math.sin(8*mu);const sin=Math.sin(phi1),cos=Math.cos(phi1),tan=Math.tan(phi1);const C1=p.ep2*cos*cos,T1=tan*tan,N1=p.a/Math.sqrt(1-p.e2*sin*sin),R1=p.a*(1-p.e2)/Math.pow(1-p.e2*sin*sin,1.5),D=(x-c.x0)/(N1*c.k0);const lat=phi1-(N1*tan/R1)*(D*D/2-(5+3*T1+10*C1-4*C1*C1-9*p.ep2)*D**4/24+(61+90*T1+298*C1+45*T1*T1-252*p.ep2-3*C1*C1)*D**6/720);const lon=c.lon0*rad+(D-(1+2*T1+C1)*D**3/6+(5-2*C1+28*T1-3*C1*C1+8*p.ep2+24*T1*T1)*D**5/120)/cos;return [lon/rad,lat/rad]}
+  function toGeographic(x,y,c){if(c.type==='geographic')return [x,y];return inverseTM(x,y,c)}
+  function fromGeographic(lon,lat,c){if(c.type==='geographic')return [lon,lat];return forwardTM(lon,lat,c)}
+  function num(v){if(typeof v==='number')return v;let s=String(v??'').trim();if(!s)return NaN;s=s.replace(/\s/g,'');if(/^[-+]?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s))s=s.replace(/,/g,'');return Number(s)}
+  function dms(value,isLat){const hemi=value<0?(isLat?'S':'W'):(isLat?'N':'E');let a=Math.abs(value),deg=Math.floor(a),minFloat=(a-deg)*60,min=Math.floor(minFloat),sec=(minFloat-min)*60;return `${deg}° ${String(min).padStart(2,'0')}' ${sec.toFixed(3).padStart(6,'0')}\" ${hemi}`}
+  function outputFieldNames(target){if(target.type==='geographic')return ['Longitude','Latitude'];return ['Converted_Easting','Converted_Northing']}
+  function formatCoord(v,target){return target.type==='geographic'?v.toFixed(8):v.toFixed(3)}
+
+  els.convertButton.onclick=()=>{
+    hideNotice();const src=getCrs(els.sourceCrs.value),tgt=getCrs(els.targetCrs.value),xi=Number(els.xColumn.value),yi=Number(els.yColumn.value);if(!src||!tgt||!state.rows.length||xi===yi)return;
+    const names=outputFieldNames(tgt);const headers=[...state.headers,...names];if(tgt.type==='geographic'&&els.includeDms.checked)headers.push('Longitude_DMS','Latitude_DMS');headers.push('Conversion_Error');
+    let errors=0;const out=state.rows.map(row=>{const x=num(row[xi]),y=num(row[yi]);let extras=[];let err='';if(!Number.isFinite(x)||!Number.isFinite(y)){err='Invalid coordinate value';errors++}else{try{if(src.type==='geographic'&&(Math.abs(x)>180||Math.abs(y)>90))throw new Error('Geographic input is outside valid longitude/latitude range');const ll=toGeographic(x,y,src);if(!Number.isFinite(ll[0])||!Number.isFinite(ll[1])||Math.abs(ll[1])>90)throw new Error('Coordinate could not be transformed');const xy=fromGeographic(ll[0],ll[1],tgt);extras=[formatCoord(xy[0],tgt),formatCoord(xy[1],tgt)];if(tgt.type==='geographic'&&els.includeDms.checked)extras.push(dms(xy[0],false),dms(xy[1],true))}catch(e){err=e.message||'Conversion failed';errors++;extras=['',''];if(tgt.type==='geographic'&&els.includeDms.checked)extras.push('','')}}return [...row,...extras,err]});
+    state.resultHeaders=headers;state.resultRows=out;renderResults(errors);els.resultsCard.classList.remove('hidden');els.resultsCard.scrollIntoView({behavior:'smooth',block:'start'});els.statusPill.textContent=errors?`${errors} issue${errors===1?'':'s'}`:'Converted';
+  };
+  function renderResults(errors){let html='<table class="results-table"><thead><tr>'+state.resultHeaders.map(h=>`<th>${escapeHtml(h)}</th>`).join('')+'</tr></thead><tbody>';state.resultRows.forEach(r=>{html+='<tr>'+r.map((v,i)=>`<td${i===r.length-1&&v?' class="result-error"':''}>${escapeHtml(v)}</td>`).join('')+'</tr>'});html+='</tbody></table>';els.resultsWrap.innerHTML=html;els.resultsTitle.textContent=errors?`Converted with ${errors} row issue${errors===1?'':'s'}`:`${state.resultRows.length} row${state.resultRows.length===1?'':'s'} converted`}
+  function csvEscape(v){const s=String(v??'');return /[",\r\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s}
+  function resultCsv(delim=','){return [state.resultHeaders,...state.resultRows].map(r=>r.map(csvEscape).join(delim)).join('\r\n')}
+  els.downloadCsv.onclick=()=>{if(!state.resultRows.length)return;const blob=new Blob(['\uFEFF'+resultCsv()],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;const src=getCrs(els.sourceCrs.value),tgt=getCrs(els.targetCrs.value);a.download=`Coordinates_${src.code.replace(':','-')}_to_${tgt.code.replace(':','-')}.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)};
+  els.copyResults.onclick=async()=>{if(!state.resultRows.length)return;const tsv=[state.resultHeaders,...state.resultRows].map(r=>r.join('\t')).join('\n');try{await navigator.clipboard.writeText(tsv);const old=els.copyResults.textContent;els.copyResults.textContent='Copied';setTimeout(()=>els.copyResults.textContent=old,1200)}catch{showNotice('Your browser blocked clipboard access. Use Download CSV instead.')}};
+
+  updateSummary();updateReady();updateDatumWarning();
+})();
+</script>
+</body>
+</html>
