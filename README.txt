@@ -1,16 +1,11 @@
 Coordinate System Converter
 
-Updated user-friendly version
+GitHub Pages version with a simplified From / To interface.
 
-What changed:
-- Automatically detects the coordinate columns, including reversed Northing/Easting order.
-- Automatically recognizes clear latitude/longitude input.
-- Tests common Alberta projected coordinate systems.
-- When several systems are possible, asks the user to choose the approximate project location instead of guessing.
-- Keeps GIS terminology and manual X/Y/source controls under Advanced options.
-- Preserves extra table columns and downloads the converted result as CSV.
+Main workflow:
+1. Paste an Excel table or upload CSV/TXT.
+2. Choose From and To using simple coordinate system families.
+3. Leave From on Detect automatically if the input system is unknown.
+4. Expand Specific types / fix detection only when exact datum, zone, meridian, or column correction is needed.
 
-To update the existing GitHub Pages site:
-1. Replace the existing index.html in the repository root with the index.html in this ZIP.
-2. Commit the change to main.
-3. GitHub Pages will redeploy automatically.
+All coordinate processing is performed locally in the browser.
