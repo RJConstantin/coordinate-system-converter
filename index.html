@@ -22,6 +22,7 @@
     .results-card{padding:0;overflow:hidden}.results-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 22px;border-bottom:1px solid var(--line)}.results-head h2{margin:0;font:700 22px/1.15 Georgia,"Times New Roman",serif}.results-actions{display:flex;gap:8px}.results-wrap{overflow:auto;max-height:420px}.result-error{color:#983d35}
     .summary{position:sticky;top:20px;overflow:hidden}.summary-head{border-bottom:1px solid var(--line);justify-content:space-between;padding:17px 18px;font-size:12px;font-weight:700;display:flex}.status-pill{color:#68736f;background:#f0f2ef;border-radius:10px;padding:3px 7px;font-size:10px}.summary-file{color:#556167;overflow-wrap:anywhere;min-height:72px;padding:17px 18px;font-size:12px;line-height:1.45}.summary-file strong{display:block;color:var(--ink);margin-bottom:5px}.summary-divider{border-top:1px solid var(--line)}.summary-row{color:var(--muted);justify-content:space-between;gap:10px;padding:11px 18px;font-size:11px;display:flex}.summary-row strong{color:var(--ink);text-align:right;font-size:11px}.checklist{padding:16px 18px 14px}.checklist h3{text-transform:uppercase;letter-spacing:1px;color:#71807a;margin:0 0 12px;font-size:11px}.checklist div{color:#55635f;align-items:flex-start;gap:8px;margin:9px 0;font-size:11px;line-height:1.35;display:flex}.checklist div span{width:15px;height:15px;color:var(--green);background:#d9ecdf;border-radius:50%;flex:0 0 15px;place-items:center;font-size:10px;font-weight:800;display:inline-grid}.privacy-note{color:#85908d;margin:0;padding:12px 18px 17px;font-size:10px;line-height:1.4;border-top:1px solid var(--line)}
 
+    .location-context{border:1px solid #d7e2dd;background:#f7faf8;border-radius:9px;padding:15px 16px;margin:17px 0 4px}.location-context label{display:block;color:#4f5c61;font-size:12px;font-weight:700}.location-context select{appearance:none;width:100%;max-width:360px;height:43px;color:var(--ink);background:linear-gradient(45deg,#0000 50%,#5e6c69 50%) calc(100% - 17px) 18px/5px 5px no-repeat,linear-gradient(135deg,#5e6c69 50%,#0000 50%) calc(100% - 12px) 18px/5px 5px no-repeat,#fff;border:1px solid #cfd9d5;border-radius:6px;margin-top:7px;padding:0 35px 0 12px;font-size:12px}.location-context p{margin:8px 0 0;color:#73807b;font-size:11px;line-height:1.45}
     .from-to-grid{display:grid;grid-template-columns:1fr 42px 1fr;gap:14px;align-items:stretch;margin:18px 0}.conversion-card{border:1px solid var(--line);background:#fbfdfb;border-radius:10px;padding:18px}.conversion-kicker{display:block;color:var(--green);letter-spacing:1px;text-transform:uppercase;font-size:10px;font-weight:800;margin-bottom:8px}.big-select{appearance:none;width:100%;height:49px;color:var(--ink);background:linear-gradient(45deg,#0000 50%,#5e6c69 50%) calc(100% - 17px) 21px/5px 5px no-repeat,linear-gradient(135deg,#5e6c69 50%,#0000 50%) calc(100% - 12px) 21px/5px 5px no-repeat,#fff;border:1px solid #cfd9d5;border-radius:7px;padding:0 35px 0 12px;font-size:14px;font-weight:700}.conversion-help{min-height:34px;color:#73807b;font-size:11px;line-height:1.45;margin-top:9px}.from-to-arrow{display:grid;place-items:center;color:var(--green);font-size:22px;font-weight:700}.specific-note{color:#73807b;font-size:11px;line-height:1.45;margin:8px 0 0}.specific-select-label{display:block;color:#4f5c61;font-size:12px;font-weight:700}.specific-select-label select{appearance:none;width:100%;height:43px;color:var(--ink);background:linear-gradient(45deg,#0000 50%,#5e6c69 50%) calc(100% - 17px) 18px/5px 5px no-repeat,linear-gradient(135deg,#5e6c69 50%,#0000 50%) calc(100% - 12px) 18px/5px 5px no-repeat,#fff;border:1px solid #cfd9d5;border-radius:6px;margin-top:7px;padding:0 35px 0 12px;font-size:12px}
     @media (max-width:1050px){.workspace{grid-template-columns:170px minmax(0,1fr);max-width:940px}.summary{grid-column:2;position:static}}@media (max-width:700px){.from-to-grid{grid-template-columns:1fr}.from-to-arrow{transform:rotate(90deg);height:24px}.topbar{height:59px}.internal{display:none}.brand{font-size:13px}.hero{padding:48px 24px 44px}.hero h1{letter-spacing:-1.8px;font-size:43px}.hero p{font-size:16px}.workspace{padding:28px 18px 50px;display:block}.steps{display:none}.form-area{gap:14px}.form-card{padding:24px 19px}.select-grid,.column-grid{grid-template-columns:1fr}.wide-select{grid-column:auto}.review-card{padding:22px 19px;display:block}.primary-button{width:100%;margin-top:18px}.summary{margin-top:16px}.results-head{align-items:flex-start;flex-direction:column}.results-actions{width:100%}.results-actions button{flex:1}}
   </style>
@@ -75,14 +76,24 @@
       <section class="form-card">
         <div class="section-label">02 &nbsp; Choose conversion</div>
         <h2>Choose what you are converting from and to.</h2>
-        <p class="section-copy">Use the simple choices below. If you do not know what the original coordinates are, leave <strong>From</strong> on <strong>Detect automatically</strong>. Exact datums, zones, and EPSG codes are optional.</p>
+        <p class="section-copy">Tell the tool where the coordinates are expected to be, then choose the simple From and To formats. If you do not know the original format, leave <strong>From</strong> on <strong>Detect automatically</strong>. Exact datums, zones, and EPSG codes are optional.</p>
+
+        <div class="location-context">
+          <label for="expectedLocation">Where are these coordinates expected to be?</label>
+          <select id="expectedLocation">
+            <option value="alberta" selected>Alberta</option>
+            <option value="canada">Canada</option>
+            <option value="none">Outside Canada / do not assume a location</option>
+          </select>
+          <p id="locationHelp">Alberta is used to catch common longitude sign issues. For example, 114° can be safely treated as 114° W only when the matching negative longitude falls in Alberta.</p>
+        </div>
 
         <div class="from-to-grid">
           <div class="conversion-card">
             <span class="conversion-kicker">From</span>
             <select id="fromType" class="big-select">
               <option value="AUTO" selected>Detect automatically</option>
-              <option value="geographic">Latitude / Longitude</option>
+              <option value="geographic">Decimal Degrees</option>
               <option value="10tm">Alberta 10TM</option>
               <option value="utm">UTM</option>
               <option value="3tm">Alberta 3TM</option>
@@ -93,7 +104,7 @@
           <div class="conversion-card">
             <span class="conversion-kicker">To</span>
             <select id="toType" class="big-select">
-              <option value="geographic" selected>Latitude / Longitude</option>
+              <option value="geographic" selected>Decimal Degrees</option>
               <option value="10tm">Alberta 10TM</option>
               <option value="utm">UTM</option>
               <option value="3tm">Alberta 3TM</option>
@@ -195,12 +206,12 @@
 
   const $ = id => document.getElementById(id);
   const state={headers:[], rows:[], sourceName:'', resultHeaders:[], resultRows:[], detection:null, selectedSourceCode:null, sourceSpecific:false, targetSpecific:false};
-  const els={pasteTab:$('pasteTab'),uploadTab:$('uploadTab'),pastePane:$('pastePane'),uploadPane:$('uploadPane'),pasteInput:$('pasteInput'),fileInput:$('fileInput'),dropzone:$('dropzone'),fileLabel:$('fileLabel'),parseNotice:$('parseNotice'),inputPreview:$('inputPreview'),fromType:$('fromType'),toType:$('toType'),fromHelp:$('fromHelp'),toHelp:$('toHelp'),sourceCrs:$('sourceCrs'),targetCrs:$('targetCrs'),xColumn:$('xColumn'),yColumn:$('yColumn'),swapColumns:$('swapColumns'),includeDms:$('includeDms'),includeDmsRow:$('includeDmsRow'),datumWarning:$('datumWarning'),autoDetection:$('autoDetection'),candidateArea:$('candidateArea'),candidateChoices:$('candidateChoices'),candidateConfirmed:$('candidateConfirmed'),convertButton:$('convertButton'),readyTitle:$('readyTitle'),resultsCard:$('resultsCard'),resultsTitle:$('resultsTitle'),resultsWrap:$('resultsWrap'),copyResults:$('copyResults'),downloadCsv:$('downloadCsv'),statusPill:$('statusPill'),summaryInput:$('summaryInput'),summarySub:$('summarySub'),summaryRows:$('summaryRows'),summarySource:$('summarySource'),summaryTarget:$('summaryTarget'),summaryX:$('summaryX'),summaryY:$('summaryY')};
+  const els={pasteTab:$('pasteTab'),uploadTab:$('uploadTab'),pastePane:$('pastePane'),uploadPane:$('uploadPane'),pasteInput:$('pasteInput'),fileInput:$('fileInput'),dropzone:$('dropzone'),fileLabel:$('fileLabel'),parseNotice:$('parseNotice'),inputPreview:$('inputPreview'),expectedLocation:$('expectedLocation'),locationHelp:$('locationHelp'),fromType:$('fromType'),toType:$('toType'),fromHelp:$('fromHelp'),toHelp:$('toHelp'),sourceCrs:$('sourceCrs'),targetCrs:$('targetCrs'),xColumn:$('xColumn'),yColumn:$('yColumn'),swapColumns:$('swapColumns'),includeDms:$('includeDms'),includeDmsRow:$('includeDmsRow'),datumWarning:$('datumWarning'),autoDetection:$('autoDetection'),candidateArea:$('candidateArea'),candidateChoices:$('candidateChoices'),candidateConfirmed:$('candidateConfirmed'),convertButton:$('convertButton'),readyTitle:$('readyTitle'),resultsCard:$('resultsCard'),resultsTitle:$('resultsTitle'),resultsWrap:$('resultsWrap'),copyResults:$('copyResults'),downloadCsv:$('downloadCsv'),statusPill:$('statusPill'),summaryInput:$('summaryInput'),summarySub:$('summarySub'),summaryRows:$('summaryRows'),summarySource:$('summarySource'),summaryTarget:$('summaryTarget'),summaryX:$('summaryX'),summaryY:$('summaryY')};
 
   function friendlyCrsName(c){
-    if(c.code==='EPSG:4326')return 'Latitude / Longitude (GPS / Google Maps) — WGS 84';
-    if(c.code==='EPSG:4269')return 'Latitude / Longitude — NAD83';
-    if(c.code==='EPSG:4617')return 'Latitude / Longitude — NAD83(CSRS)';
+    if(c.code==='EPSG:4326')return 'Decimal Degrees (GPS / Google Maps) — WGS 84';
+    if(c.code==='EPSG:4269')return 'Decimal Degrees — NAD83';
+    if(c.code==='EPSG:4617')return 'Decimal Degrees — NAD83(CSRS)';
     if(c.code==='EPSG:3400')return 'Alberta 10TM Forest — NAD83';
     if(c.code==='EPSG:3402')return 'Alberta 10TM Forest — NAD83(CSRS)';
     if(c.code==='EPSG:3401')return 'Alberta 10TM Resource — NAD83';
@@ -216,12 +227,25 @@
   populateCrs(els.sourceCrs,'AUTO',true); populateCrs(els.targetCrs,'EPSG:4326');
   const getCrs=code=>crs.find(c=>c.code===code);
   function crsTypeKey(c){if(!c)return '';if(c.type==='geographic')return 'geographic';if(c.group==='Alberta 10TM')return '10tm';if(c.group.startsWith('UTM'))return 'utm';if(c.group.startsWith('Alberta 3TM'))return '3tm';return ''}
-  function typeLabel(v){return ({AUTO:'Detect automatically',geographic:'Latitude / Longitude','10tm':'Alberta 10TM',utm:'UTM','3tm':'Alberta 3TM'})[v]||v}
+  function typeLabel(v){return ({AUTO:'Detect automatically',geographic:'Decimal Degrees','10tm':'Alberta 10TM',utm:'UTM','3tm':'Alberta 3TM'})[v]||v}
+  const locationProfiles={
+    alberta:{label:'Alberta',lonMin:-120.05,lonMax:-109.95,latMin:48.95,latMax:60.05},
+    canada:{label:'Canada',lonMin:-141.1,lonMax:-52.4,latMin:41.5,latMax:83.2},
+    none:{label:'No location assumption'}
+  };
+  function expectedProfile(){return locationProfiles[els.expectedLocation?.value||'alberta']||locationProfiles.alberta}
+  function pointFitsExpectedLocation(lon,lat){const p=expectedProfile();if(!Number.isFinite(lon)||!Number.isFinite(lat))return false;if(!('lonMin' in p))return false;return lon>=p.lonMin&&lon<=p.lonMax&&lat>=p.latMin&&lat<=p.latMax}
+  function normalizeGeographicInput(lon,lat){
+    if(!Number.isFinite(lon)||!Number.isFinite(lat))return {lon,lat,corrected:false};
+    if(lon>0&&pointFitsExpectedLocation(-lon,lat))return {lon:-lon,lat,corrected:true};
+    return {lon,lat,corrected:false};
+  }
+  function locationContextLabel(){return expectedProfile().label}
   function activeSource(){if(state.sourceSpecific&&els.sourceCrs.value!=='AUTO')return getCrs(els.sourceCrs.value);if(state.selectedSourceCode)return getCrs(state.selectedSourceCode);if(state.detection&&!state.detection.requiresChoice)return getCrs(state.detection.sourceCode);return null}
-  function firstLonLat(){const src=activeSource();if(!src||!state.rows.length||els.xColumn.value===''||els.yColumn.value==='')return null;const xi=Number(els.xColumn.value),yi=Number(els.yColumn.value);for(const r of state.rows.slice(0,25)){const x=num(r[xi]),y=num(r[yi]);if(!Number.isFinite(x)||!Number.isFinite(y))continue;try{const ll=toGeographic(x,y,src);if(Number.isFinite(ll[0])&&Number.isFinite(ll[1]))return ll}catch{}}return null}
+  function firstLonLat(){const src=activeSource();if(!src||!state.rows.length||els.xColumn.value===''||els.yColumn.value==='')return null;const xi=Number(els.xColumn.value),yi=Number(els.yColumn.value);for(const r of state.rows.slice(0,25)){let x=num(r[xi]),y=num(r[yi]);if(!Number.isFinite(x)||!Number.isFinite(y))continue;try{if(src.type==='geographic'){const n=normalizeGeographicInput(x,y);x=n.lon;y=n.lat}const ll=toGeographic(x,y,src);if(Number.isFinite(ll[0])&&Number.isFinite(ll[1]))return ll}catch{}}return null}
   function defaultTargetForType(type){if(type==='geographic')return getCrs('EPSG:4326');if(type==='10tm')return getCrs('EPSG:3400');const ll=firstLonLat();if(type==='utm'){let z=12;if(ll)z=Math.max(10,Math.min(15,Math.floor((ll[0]+180)/6)+1));return getCrs(`EPSG:${26900+z}`)}if(type==='3tm'){let lon0=-114;if(ll){lon0=[-111,-114,-117,-120].reduce((a,b)=>Math.abs(ll[0]-a)<=Math.abs(ll[0]-b)?a:b)}const code={[-111]:3775,[-114]:3776,[-117]:3777,[-120]:3801}[lon0];return getCrs(`EPSG:${code}`)}return getCrs('EPSG:4326')}
   function resolvedTarget(){if(state.targetSpecific)return getCrs(els.targetCrs.value);return defaultTargetForType(els.toType.value)}
-  function refreshSimpleHelp(){els.fromHelp.textContent=els.fromType.value==='AUTO'?'Best choice if the person using the tool does not know the original coordinate system.':`The page will look for ${typeLabel(els.fromType.value)} coordinates and determine the coordinate columns automatically.`;const t=resolvedTarget();els.toHelp.textContent=els.toType.value==='geographic'?'Uses GPS / Google Maps style longitude and latitude by default.':els.toType.value==='utm'?'The UTM zone is chosen automatically from the project location unless a specific type is selected.':els.toType.value==='3tm'?'The closest Alberta 3TM reference meridian is chosen automatically unless a specific type is selected.':`Uses ${t?friendlyCrsName(t):'the standard Alberta 10TM Forest system'} by default. Exact types are available below if needed.`;els.includeDmsRow.classList.toggle('hidden',els.toType.value!=='geographic')}
+  function refreshSimpleHelp(){els.fromHelp.textContent=els.fromType.value==='AUTO'?'Best choice if the person using the tool does not know the original coordinate system.':`The page will look for ${typeLabel(els.fromType.value)} coordinates and determine the coordinate columns automatically.`;const t=resolvedTarget();els.toHelp.textContent=els.toType.value==='geographic'?'Outputs standard decimal-degree longitude and latitude.':els.toType.value==='utm'?'The UTM zone is chosen automatically from the project location unless a specific type is selected.':els.toType.value==='3tm'?'The closest Alberta 3TM reference meridian is chosen automatically unless a specific type is selected.':`Uses ${t?friendlyCrsName(t):'the standard Alberta 10TM Forest system'} by default. Exact types are available below if needed.`;els.includeDmsRow.classList.toggle('hidden',els.toType.value!=='geographic')}
 
 
   function switchTab(which){const paste=which==='paste';els.pasteTab.classList.toggle('active',paste);els.uploadTab.classList.toggle('active',!paste);els.pastePane.classList.toggle('hidden',!paste);els.uploadPane.classList.toggle('hidden',paste)}
@@ -277,8 +301,31 @@
   function clearGeographicPair(){
     if(!(els.fromType.value==='AUTO'||els.fromType.value==='geographic'))return null;
     const numeric=state.headers.map((_,i)=>({i,s:columnStats(i)})).filter(o=>o.s.fraction>=.75);
-    for(const a of numeric)for(const b of numeric){if(a.i===b.i)continue;const xs=a.s,ys=b.s;const xLooksLon=xs.min>=-121.5&&xs.max<=-109&&xs.median<0;const yLooksLat=ys.min>=48.5&&ys.max<=60.5;if(xLooksLon&&yLooksLat)return {xi:a.i,yi:b.i,score:999,family:'Geographic longitude/latitude',sourceCode:'EPSG:4326',confidence:'High',requiresChoice:false,alternatives:[],choices:[]}}
-    return null;
+    const options=[];
+    for(const a of numeric)for(const b of numeric){
+      if(a.i===b.i)continue;
+      const xs=a.s,ys=b.s;
+      if(xs.min < -180 || xs.max > 180 || ys.min < -90 || ys.max > 90)continue;
+      let total=0,direct=0,correctable=0;
+      for(const r of state.rows.slice(0,25)){
+        const lon=num(r[a.i]),lat=num(r[b.i]);
+        if(!Number.isFinite(lon)||!Number.isFinite(lat)||Math.abs(lon)>180||Math.abs(lat)>90)continue;
+        total++;
+        if(pointFitsExpectedLocation(lon,lat))direct++;
+        else if(lon>0&&pointFitsExpectedLocation(-lon,lat))correctable++;
+      }
+      if(!total)continue;
+      const obviousLongitude=Math.max(Math.abs(xs.min),Math.abs(xs.max))>90;
+      const headerBoost=headerScore(state.headers[a.i],'x')+headerScore(state.headers[b.i],'y');
+      const locationMatches=direct+correctable;
+      let score=headerBoost+(obviousLongitude?80:0)+(locationMatches/total)*100;
+      if(els.expectedLocation.value==='none'&&obviousLongitude)score+=30;
+      if(els.fromType.value==='geographic')score+=20;
+      if(score<45)continue;
+      options.push({xi:a.i,yi:b.i,score,family:'Decimal Degrees',sourceCode:'EPSG:4326',confidence:'High',requiresChoice:false,alternatives:[],choices:[],signCorrection:correctable>0&&correctable>=direct,correctableRows:correctable,totalRows:total});
+    }
+    options.sort((a,b)=>b.score-a.score);
+    return options[0]||null;
   }
   function detectInput(){
     if(!state.sourceSpecific)state.selectedSourceCode=null;
@@ -304,7 +351,11 @@
     if(!state.detection){els.autoDetection.innerHTML='<strong>Waiting for coordinates.</strong> Paste a table or upload a CSV above.';return}
     const d=state.detection, xName=escapeHtml(state.headers[d.xi]), yName=escapeHtml(state.headers[d.yi]);
     if(!d.requiresChoice){
-      els.autoDetection.innerHTML=`<strong>Input detected.</strong> We found the coordinate columns automatically and the coordinates match <strong>${escapeHtml(d.family)}</strong>.`;
+      if(d.signCorrection){
+        els.autoDetection.innerHTML=`<strong>Decimal Degrees detected.</strong> We identified <strong>${xName}</strong> as longitude and <strong>${yName}</strong> as latitude.<br><span style="color:#4d625a">Because the expected location is <strong>${escapeHtml(locationContextLabel())}</strong>, positive longitude values that fall inside that location when read as west will automatically be treated as negative. Your original table is not changed.</span>`;
+      }else{
+        els.autoDetection.innerHTML=`<strong>Input detected.</strong> We found the coordinate columns automatically and the coordinates match <strong>${escapeHtml(d.family)}</strong>.`;
+      }
       return;
     }
     els.autoDetection.innerHTML=`<strong>Coordinate columns detected.</strong><br><span style="color:#6d6659">The numbers fit more than one Alberta coordinate system, so we need one simple location check before converting.</span>`;
@@ -321,6 +372,10 @@
   function populateColumns(){[els.xColumn,els.yColumn].forEach(s=>{s.innerHTML='';if(!state.headers.length){s.innerHTML='<option value="">Load data first</option>';return}state.headers.forEach((h,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=h;s.appendChild(o)})});if(state.headers.length){els.xColumn.value='0';els.yColumn.value=String(Math.min(1,state.headers.length-1))}}
   els.swapColumns.onclick=()=>{if(!state.headers.length)return;const a=els.xColumn.value;els.xColumn.value=els.yColumn.value;els.yColumn.value=a;state.detection=null;state.selectedSourceCode=null;renderDetection();updateSummary();updateReady()};
   [els.xColumn,els.yColumn].forEach(e=>e.addEventListener('change',()=>{state.detection=null;state.selectedSourceCode=null;renderDetection();updateSummary();updateReady()}));
+  els.expectedLocation.addEventListener('change',()=>{
+    els.locationHelp.textContent=els.expectedLocation.value==='alberta'?'Alberta is used to catch common longitude sign issues. Positive longitude values are only changed to west/negative when the matching point falls in Alberta.':els.expectedLocation.value==='canada'?'Canada is used to catch common missing west/negative signs in decimal-degree longitudes. The sign is only corrected when the negative longitude fits within Canada.':'No longitude sign correction will be made automatically. Coordinates will be interpreted exactly as entered.';
+    state.selectedSourceCode=null;state.detection=null;detectInput();refreshSimpleHelp();updateSummary();updateReady();updateDatumWarning();
+  });
   els.fromType.addEventListener('change',()=>{state.sourceSpecific=false;els.sourceCrs.value='AUTO';state.selectedSourceCode=null;detectInput();refreshSimpleHelp();updateSummary();updateReady();updateDatumWarning()});
   els.toType.addEventListener('change',()=>{state.targetSpecific=false;refreshSimpleHelp();updateSummary();updateReady();updateDatumWarning()});
   els.sourceCrs.addEventListener('change',()=>{state.sourceSpecific=els.sourceCrs.value!=='AUTO';if(state.sourceSpecific){state.selectedSourceCode=els.sourceCrs.value;const c=getCrs(els.sourceCrs.value);if(c)els.fromType.value=crsTypeKey(c)}else{state.selectedSourceCode=null;detectInput()}refreshSimpleHelp();updateSummary();updateReady();updateDatumWarning()});
@@ -347,10 +402,10 @@
   els.convertButton.onclick=()=>{
     hideNotice();const src=activeSource(),tgt=resolvedTarget(),xi=Number(els.xColumn.value),yi=Number(els.yColumn.value);if(!src||!tgt||!state.rows.length||xi===yi)return;
     const names=outputFieldNames(tgt);const headers=[...state.headers,...names];if(tgt.type==='geographic'&&els.includeDms.checked)headers.push('Longitude_DMS','Latitude_DMS');headers.push('Conversion_Error');
-    let errors=0;const out=state.rows.map(row=>{const x=num(row[xi]),y=num(row[yi]);let extras=[];let err='';if(!Number.isFinite(x)||!Number.isFinite(y)){err='Invalid coordinate value';errors++}else{try{if(src.type==='geographic'&&(Math.abs(x)>180||Math.abs(y)>90))throw new Error('Geographic input is outside valid longitude/latitude range');const ll=toGeographic(x,y,src);if(!Number.isFinite(ll[0])||!Number.isFinite(ll[1])||Math.abs(ll[1])>90)throw new Error('Coordinate could not be transformed');const xy=fromGeographic(ll[0],ll[1],tgt);extras=[formatCoord(xy[0],tgt),formatCoord(xy[1],tgt)];if(tgt.type==='geographic'&&els.includeDms.checked)extras.push(dms(xy[0],false),dms(xy[1],true))}catch(e){err=e.message||'Conversion failed';errors++;extras=['',''];if(tgt.type==='geographic'&&els.includeDms.checked)extras.push('','')}}return [...row,...extras,err]});
-    state.resultHeaders=headers;state.resultRows=out;renderResults(errors);els.resultsCard.classList.remove('hidden');els.resultsCard.scrollIntoView({behavior:'smooth',block:'start'});els.statusPill.textContent=errors?`${errors} issue${errors===1?'':'s'}`:'Converted';
+    let errors=0,signCorrections=0;const out=state.rows.map(row=>{let x=num(row[xi]),y=num(row[yi]);let extras=[];let err='';if(!Number.isFinite(x)||!Number.isFinite(y)){err='Invalid coordinate value';errors++}else{try{if(src.type==='geographic'){if(Math.abs(x)>180||Math.abs(y)>90)throw new Error('Geographic input is outside valid longitude/latitude range');const n=normalizeGeographicInput(x,y);x=n.lon;y=n.lat;if(n.corrected)signCorrections++}const ll=toGeographic(x,y,src);if(!Number.isFinite(ll[0])||!Number.isFinite(ll[1])||Math.abs(ll[1])>90)throw new Error('Coordinate could not be transformed');const xy=fromGeographic(ll[0],ll[1],tgt);extras=[formatCoord(xy[0],tgt),formatCoord(xy[1],tgt)];if(tgt.type==='geographic'&&els.includeDms.checked)extras.push(dms(xy[0],false),dms(xy[1],true))}catch(e){err=e.message||'Conversion failed';errors++;extras=['',''];if(tgt.type==='geographic'&&els.includeDms.checked)extras.push('','')}}return [...row,...extras,err]});
+    state.resultHeaders=headers;state.resultRows=out;renderResults(errors,signCorrections);els.resultsCard.classList.remove('hidden');els.resultsCard.scrollIntoView({behavior:'smooth',block:'start'});els.statusPill.textContent=errors?`${errors} issue${errors===1?'':'s'}`:(signCorrections?`${signCorrections} sign fixed`:'Converted');
   };
-  function renderResults(errors){let html='<table class="results-table"><thead><tr>'+state.resultHeaders.map(h=>`<th>${escapeHtml(h)}</th>`).join('')+'</tr></thead><tbody>';state.resultRows.forEach(r=>{html+='<tr>'+r.map((v,i)=>`<td${i===r.length-1&&v?' class="result-error"':''}>${escapeHtml(v)}</td>`).join('')+'</tr>'});html+='</tbody></table>';els.resultsWrap.innerHTML=html;els.resultsTitle.textContent=errors?`Converted with ${errors} row issue${errors===1?'':'s'}`:`${state.resultRows.length} row${state.resultRows.length===1?'':'s'} converted`}
+  function renderResults(errors,signCorrections=0){let html='<table class="results-table"><thead><tr>'+state.resultHeaders.map(h=>`<th>${escapeHtml(h)}</th>`).join('')+'</tr></thead><tbody>';state.resultRows.forEach(r=>{html+='<tr>'+r.map((v,i)=>`<td${i===r.length-1&&v?' class="result-error"':''}>${escapeHtml(v)}</td>`).join('')+'</tr>'});html+='</tbody></table>';els.resultsWrap.innerHTML=html;if(errors)els.resultsTitle.textContent=`Converted with ${errors} row issue${errors===1?'':'s'}`;else if(signCorrections)els.resultsTitle.textContent=`${state.resultRows.length} row${state.resultRows.length===1?'':'s'} converted · ${signCorrections} longitude sign${signCorrections===1?'':'s'} corrected`;else els.resultsTitle.textContent=`${state.resultRows.length} row${state.resultRows.length===1?'':'s'} converted`}
   function csvEscape(v){const s=String(v??'');return /[",\r\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s}
   function resultCsv(delim=','){return [state.resultHeaders,...state.resultRows].map(r=>r.map(csvEscape).join(delim)).join('\r\n')}
   els.downloadCsv.onclick=()=>{if(!state.resultRows.length)return;const blob=new Blob(['\uFEFF'+resultCsv()],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;const src=activeSource(),tgt=resolvedTarget();a.download=`Coordinates_${src.code.replace(':','-')}_to_${tgt.code.replace(':','-')}.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)};
