@@ -1,8 +1,16 @@
 Coordinate System Converter
 
-GitHub Pages deployment:
-1. Create a separate GitHub repository for this tool.
-2. Upload index.html to the repository root.
-3. In Settings > Pages, publish from the main branch / root if Pages is not already enabled.
+Updated user-friendly version
 
-The additional Coordinate_System_Converter.html file is the same page under a descriptive filename. GitHub Pages uses index.html as the home page.
+What changed:
+- Automatically detects the coordinate columns, including reversed Northing/Easting order.
+- Automatically recognizes clear latitude/longitude input.
+- Tests common Alberta projected coordinate systems.
+- When several systems are possible, asks the user to choose the approximate project location instead of guessing.
+- Keeps GIS terminology and manual X/Y/source controls under Advanced options.
+- Preserves extra table columns and downloads the converted result as CSV.
+
+To update the existing GitHub Pages site:
+1. Replace the existing index.html in the repository root with the index.html in this ZIP.
+2. Commit the change to main.
+3. GitHub Pages will redeploy automatically.
