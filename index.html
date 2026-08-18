@@ -104,13 +104,22 @@
           <div class="conversion-card">
             <span class="conversion-kicker">To</span>
             <select id="toType" class="big-select">
-              <option value="geographic" selected>Decimal Degrees</option>
-              <option value="10tm">Alberta 10TM</option>
-              <option value="utm">UTM</option>
-              <option value="3tm">Alberta 3TM</option>
+              <option value="10tm_m">Alberta 10TM (Meters)</option>
+              <option value="10tm_ft">Alberta 10TM (Feet)</option>
+              <option value="10tm_usft">Alberta 10TM (US Feet)</option>
+              <option value="3tm_m">Alberta 3TM (Meters)</option>
+              <option value="3tm_ft">Alberta 3TM (Feet)</option>
+              <option value="3tm_usft">Alberta 3TM (US Feet)</option>
+              <option value="utm_m">UTM (Meters)</option>
+              <option value="utm_ft">UTM (Feet)</option>
+              <option value="utm_usft">UTM (US Feet)</option>
+              <option value="dd" selected>Decimal Degrees (Degrees)</option>
+              <option value="dms">Degrees Minutes Seconds (Degrees)</option>
+              <option value="ddm">Degrees Decimal Minutes (Degrees)</option>
+              <option value="mgrs">MGRS</option>
+              <option value="usng">US National Grid</option>
             </select>
-            <div class="conversion-help" id="toHelp">Uses GPS / Google Maps style longitude and latitude by default.</div>
-            <label class="checkbox-row" id="includeDmsRow"><input type="checkbox" id="includeDms" checked /> Also include degrees, minutes, seconds</label>
+            <div class="conversion-help" id="toHelp">Outputs standard decimal-degree longitude and latitude.</div>
           </div>
         </div>
 
@@ -206,7 +215,7 @@
 
   const $ = id => document.getElementById(id);
   const state={headers:[], rows:[], sourceName:'', resultHeaders:[], resultRows:[], detection:null, selectedSourceCode:null, sourceSpecific:false, targetSpecific:false};
-  const els={pasteTab:$('pasteTab'),uploadTab:$('uploadTab'),pastePane:$('pastePane'),uploadPane:$('uploadPane'),pasteInput:$('pasteInput'),fileInput:$('fileInput'),dropzone:$('dropzone'),fileLabel:$('fileLabel'),parseNotice:$('parseNotice'),inputPreview:$('inputPreview'),expectedLocation:$('expectedLocation'),locationHelp:$('locationHelp'),fromType:$('fromType'),toType:$('toType'),fromHelp:$('fromHelp'),toHelp:$('toHelp'),sourceCrs:$('sourceCrs'),targetCrs:$('targetCrs'),xColumn:$('xColumn'),yColumn:$('yColumn'),swapColumns:$('swapColumns'),includeDms:$('includeDms'),includeDmsRow:$('includeDmsRow'),datumWarning:$('datumWarning'),autoDetection:$('autoDetection'),candidateArea:$('candidateArea'),candidateChoices:$('candidateChoices'),candidateConfirmed:$('candidateConfirmed'),convertButton:$('convertButton'),readyTitle:$('readyTitle'),resultsCard:$('resultsCard'),resultsTitle:$('resultsTitle'),resultsWrap:$('resultsWrap'),copyResults:$('copyResults'),downloadCsv:$('downloadCsv'),statusPill:$('statusPill'),summaryInput:$('summaryInput'),summarySub:$('summarySub'),summaryRows:$('summaryRows'),summarySource:$('summarySource'),summaryTarget:$('summaryTarget'),summaryX:$('summaryX'),summaryY:$('summaryY')};
+  const els={pasteTab:$('pasteTab'),uploadTab:$('uploadTab'),pastePane:$('pastePane'),uploadPane:$('uploadPane'),pasteInput:$('pasteInput'),fileInput:$('fileInput'),dropzone:$('dropzone'),fileLabel:$('fileLabel'),parseNotice:$('parseNotice'),inputPreview:$('inputPreview'),expectedLocation:$('expectedLocation'),locationHelp:$('locationHelp'),fromType:$('fromType'),toType:$('toType'),fromHelp:$('fromHelp'),toHelp:$('toHelp'),sourceCrs:$('sourceCrs'),targetCrs:$('targetCrs'),xColumn:$('xColumn'),yColumn:$('yColumn'),swapColumns:$('swapColumns'),datumWarning:$('datumWarning'),autoDetection:$('autoDetection'),candidateArea:$('candidateArea'),candidateChoices:$('candidateChoices'),candidateConfirmed:$('candidateConfirmed'),convertButton:$('convertButton'),readyTitle:$('readyTitle'),resultsCard:$('resultsCard'),resultsTitle:$('resultsTitle'),resultsWrap:$('resultsWrap'),copyResults:$('copyResults'),downloadCsv:$('downloadCsv'),statusPill:$('statusPill'),summaryInput:$('summaryInput'),summarySub:$('summarySub'),summaryRows:$('summaryRows'),summarySource:$('summarySource'),summaryTarget:$('summaryTarget'),summaryX:$('summaryX'),summaryY:$('summaryY')};
 
   function friendlyCrsName(c){
     if(c.code==='EPSG:4326')return 'Decimal Degrees (GPS / Google Maps) — WGS 84';
@@ -228,6 +237,25 @@
   const getCrs=code=>crs.find(c=>c.code===code);
   function crsTypeKey(c){if(!c)return '';if(c.type==='geographic')return 'geographic';if(c.group==='Alberta 10TM')return '10tm';if(c.group.startsWith('UTM'))return 'utm';if(c.group.startsWith('Alberta 3TM'))return '3tm';return ''}
   function typeLabel(v){return ({AUTO:'Detect automatically',geographic:'Decimal Degrees','10tm':'Alberta 10TM',utm:'UTM','3tm':'Alberta 3TM'})[v]||v}
+  const OUTPUT_SPECS={
+    '10tm_m':{label:'Alberta 10TM (Meters)',family:'10tm',kind:'projected',unit:'Meters',factor:1},
+    '10tm_ft':{label:'Alberta 10TM (Feet)',family:'10tm',kind:'projected',unit:'Feet',factor:1/0.3048},
+    '10tm_usft':{label:'Alberta 10TM (US Feet)',family:'10tm',kind:'projected',unit:'US Feet',factor:3937/1200},
+    '3tm_m':{label:'Alberta 3TM (Meters)',family:'3tm',kind:'projected',unit:'Meters',factor:1},
+    '3tm_ft':{label:'Alberta 3TM (Feet)',family:'3tm',kind:'projected',unit:'Feet',factor:1/0.3048},
+    '3tm_usft':{label:'Alberta 3TM (US Feet)',family:'3tm',kind:'projected',unit:'US Feet',factor:3937/1200},
+    'utm_m':{label:'UTM (Meters)',family:'utm',kind:'projected',unit:'Meters',factor:1},
+    'utm_ft':{label:'UTM (Feet)',family:'utm',kind:'projected',unit:'Feet',factor:1/0.3048},
+    'utm_usft':{label:'UTM (US Feet)',family:'utm',kind:'projected',unit:'US Feet',factor:3937/1200},
+    dd:{label:'Decimal Degrees (Degrees)',family:'geographic',kind:'dd'},
+    dms:{label:'Degrees Minutes Seconds (Degrees)',family:'geographic',kind:'dms'},
+    ddm:{label:'Degrees Decimal Minutes (Degrees)',family:'geographic',kind:'ddm'},
+    mgrs:{label:'MGRS',family:'utm',kind:'mgrs'},
+    usng:{label:'US National Grid',family:'utm',kind:'usng'}
+  };
+  function outputSpec(){return OUTPUT_SPECS[els.toType.value]||OUTPUT_SPECS.dd}
+  function outputLabel(){return outputSpec().label}
+  function outputKeyForCrs(c){const k=crsTypeKey(c);return k==='geographic'?'dd':k==='10tm'?'10tm_m':k==='utm'?'utm_m':k==='3tm'?'3tm_m':'dd'}
   const locationProfiles={
     alberta:{label:'Alberta',lonMin:-120.05,lonMax:-109.95,latMin:48.95,latMax:60.05},
     canada:{label:'Canada',lonMin:-141.1,lonMax:-52.4,latMin:41.5,latMax:83.2},
@@ -243,9 +271,28 @@
   function locationContextLabel(){return expectedProfile().label}
   function activeSource(){if(state.sourceSpecific&&els.sourceCrs.value!=='AUTO')return getCrs(els.sourceCrs.value);if(state.selectedSourceCode)return getCrs(state.selectedSourceCode);if(state.detection&&!state.detection.requiresChoice)return getCrs(state.detection.sourceCode);return null}
   function firstLonLat(){const src=activeSource();if(!src||!state.rows.length||els.xColumn.value===''||els.yColumn.value==='')return null;const xi=Number(els.xColumn.value),yi=Number(els.yColumn.value);for(const r of state.rows.slice(0,25)){let x=num(r[xi]),y=num(r[yi]);if(!Number.isFinite(x)||!Number.isFinite(y))continue;try{if(src.type==='geographic'){const n=normalizeGeographicInput(x,y);x=n.lon;y=n.lat}const ll=toGeographic(x,y,src);if(Number.isFinite(ll[0])&&Number.isFinite(ll[1]))return ll}catch{}}return null}
-  function defaultTargetForType(type){if(type==='geographic')return getCrs('EPSG:4326');if(type==='10tm')return getCrs('EPSG:3400');const ll=firstLonLat();if(type==='utm'){let z=12;if(ll)z=Math.max(10,Math.min(15,Math.floor((ll[0]+180)/6)+1));return getCrs(`EPSG:${26900+z}`)}if(type==='3tm'){let lon0=-114;if(ll){lon0=[-111,-114,-117,-120].reduce((a,b)=>Math.abs(ll[0]-a)<=Math.abs(ll[0]-b)?a:b)}const code={[-111]:3775,[-114]:3776,[-117]:3777,[-120]:3801}[lon0];return getCrs(`EPSG:${code}`)}return getCrs('EPSG:4326')}
-  function resolvedTarget(){if(state.targetSpecific)return getCrs(els.targetCrs.value);return defaultTargetForType(els.toType.value)}
-  function refreshSimpleHelp(){els.fromHelp.textContent=els.fromType.value==='AUTO'?'Best choice if the person using the tool does not know the original coordinate system.':`The page will look for ${typeLabel(els.fromType.value)} coordinates and determine the coordinate columns automatically.`;const t=resolvedTarget();els.toHelp.textContent=els.toType.value==='geographic'?'Outputs standard decimal-degree longitude and latitude.':els.toType.value==='utm'?'The UTM zone is chosen automatically from the project location unless a specific type is selected.':els.toType.value==='3tm'?'The closest Alberta 3TM reference meridian is chosen automatically unless a specific type is selected.':`Uses ${t?friendlyCrsName(t):'the standard Alberta 10TM Forest system'} by default. Exact types are available below if needed.`;els.includeDmsRow.classList.toggle('hidden',els.toType.value!=='geographic')}
+  function utmZoneFor(lon,lat){
+    let z=Math.floor((lon+180)/6)+1;z=Math.max(1,Math.min(60,z));
+    if(lat>=56&&lat<64&&lon>=3&&lon<12)z=32;
+    if(lat>=72&&lat<84){if(lon>=0&&lon<9)z=31;else if(lon<21)z=33;else if(lon<33)z=35;else if(lon<42)z=37}
+    return z;
+  }
+  function dynamicWgs84Utm(zone){return {group:'UTM - WGS 84',code:`EPSG:${32600+zone}`,name:`WGS 84 / UTM zone ${zone}N`,type:'tm',datum:'WGS84',ellipsoid:WGS84,lon0:6*zone-183,lat0:0,k0:0.9996,x0:500000,y0:0}}
+  function dynamicNad83Utm(zone){return {group:'UTM - NAD83',code:`EPSG:${26900+zone}`,name:`NAD83 / UTM zone ${zone}N`,type:'tm',datum:'NAD83',ellipsoid:GRS80,lon0:6*zone-183,lat0:0,k0:0.9996,x0:500000,y0:0}}
+  function defaultTargetForType(type){if(type==='geographic')return getCrs('EPSG:4326');if(type==='10tm')return getCrs('EPSG:3400');const ll=firstLonLat();if(type==='utm'){let z=12;if(ll)z=utmZoneFor(ll[0],ll[1]);return getCrs(`EPSG:${26900+z}`)||dynamicNad83Utm(z)}if(type==='3tm'){let lon0=-114;if(ll){lon0=[-111,-114,-117,-120].reduce((a,b)=>Math.abs(ll[0]-a)<=Math.abs(ll[0]-b)?a:b)}const code={[-111]:3775,[-114]:3776,[-117]:3777,[-120]:3801}[lon0];return getCrs(`EPSG:${code}`)}return getCrs('EPSG:4326')}
+  function resolvedTarget(){if(state.targetSpecific)return getCrs(els.targetCrs.value);const spec=outputSpec();if(spec.kind==='mgrs'||spec.kind==='usng'){const ll=firstLonLat();const z=ll?utmZoneFor(ll[0],ll[1]):12;return dynamicWgs84Utm(z)}return defaultTargetForType(spec.family)}
+  function refreshSimpleHelp(){
+    els.fromHelp.textContent=els.fromType.value==='AUTO'?'Best choice if the person using the tool does not know the original coordinate system.':`The page will look for ${typeLabel(els.fromType.value)} coordinates and determine the coordinate columns automatically.`;
+    const spec=outputSpec(),t=resolvedTarget();
+    if(spec.kind==='dd')els.toHelp.textContent='Outputs longitude and latitude as decimal degrees.';
+    else if(spec.kind==='dms')els.toHelp.textContent='Outputs longitude and latitude as degrees, minutes, and seconds.';
+    else if(spec.kind==='ddm')els.toHelp.textContent='Outputs longitude and latitude as degrees and decimal minutes.';
+    else if(spec.kind==='mgrs')els.toHelp.textContent='Outputs a Military Grid Reference System location. The UTM zone is selected automatically.';
+    else if(spec.kind==='usng')els.toHelp.textContent='Outputs a US National Grid style reference. The grid zone is selected automatically.';
+    else if(spec.family==='utm')els.toHelp.textContent=`The UTM zone is chosen automatically from the project location. Output units: ${spec.unit}.`;
+    else if(spec.family==='3tm')els.toHelp.textContent=`The closest Alberta 3TM reference meridian is chosen automatically. Output units: ${spec.unit}.`;
+    else els.toHelp.textContent=`Uses ${t?friendlyCrsName(t):'the standard Alberta 10TM Forest system'} by default. Output units: ${spec.unit}.`;
+  }
 
 
   function switchTab(which){const paste=which==='paste';els.pasteTab.classList.toggle('active',paste);els.uploadTab.classList.toggle('active',!paste);els.pastePane.classList.toggle('hidden',!paste);els.uploadPane.classList.toggle('hidden',paste)}
@@ -379,12 +426,12 @@
   els.fromType.addEventListener('change',()=>{state.sourceSpecific=false;els.sourceCrs.value='AUTO';state.selectedSourceCode=null;detectInput();refreshSimpleHelp();updateSummary();updateReady();updateDatumWarning()});
   els.toType.addEventListener('change',()=>{state.targetSpecific=false;refreshSimpleHelp();updateSummary();updateReady();updateDatumWarning()});
   els.sourceCrs.addEventListener('change',()=>{state.sourceSpecific=els.sourceCrs.value!=='AUTO';if(state.sourceSpecific){state.selectedSourceCode=els.sourceCrs.value;const c=getCrs(els.sourceCrs.value);if(c)els.fromType.value=crsTypeKey(c)}else{state.selectedSourceCode=null;detectInput()}refreshSimpleHelp();updateSummary();updateReady();updateDatumWarning()});
-  els.targetCrs.addEventListener('change',()=>{state.targetSpecific=true;const c=getCrs(els.targetCrs.value);if(c)els.toType.value=crsTypeKey(c);refreshSimpleHelp();updateSummary();updateReady();updateDatumWarning()});
+  els.targetCrs.addEventListener('change',()=>{state.targetSpecific=true;const c=getCrs(els.targetCrs.value);if(c)els.toType.value=outputKeyForCrs(c);refreshSimpleHelp();updateSummary();updateReady();updateDatumWarning()});
 
   function renderInputPreview(){if(!state.rows.length){els.inputPreview.innerHTML='<div class="empty-preview">No coordinate rows found.</div>';return}const max=6;let html='<table><thead><tr>'+state.headers.map(h=>`<th>${escapeHtml(h)}</th>`).join('')+'</tr></thead><tbody>';state.rows.slice(0,max).forEach(r=>{html+='<tr>'+state.headers.map((_,i)=>`<td>${escapeHtml(r[i]??'')}</td>`).join('')+'</tr>'});html+='</tbody></table>';if(state.rows.length>max)html+=`<div class="empty-preview">Previewing ${max} of ${state.rows.length} rows.</div>`;els.inputPreview.innerHTML=html}
   function escapeHtml(s){return String(s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]))}
   function shortName(c){return c?`${c.code.replace('EPSG:','')} ${c.name}`:'Not selected'}
-  function updateSummary(){const src=activeSource(),tgt=resolvedTarget();els.summaryInput.textContent=state.sourceName||'No data loaded';els.summarySub.textContent=state.rows.length?`${state.headers.length} columns detected`:'Paste coordinates or upload a CSV.';els.summaryRows.textContent=String(state.rows.length);els.summarySource.textContent=state.sourceSpecific?shortName(src):(src?typeLabel(crsTypeKey(src)):(state.detection&&state.detection.requiresChoice?'Confirm location':typeLabel(els.fromType.value)));els.summaryTarget.textContent=state.targetSpecific?shortName(tgt):typeLabel(els.toType.value);els.summaryX.textContent=state.headers[Number(els.xColumn.value)]||'Not set';els.summaryY.textContent=state.headers[Number(els.yColumn.value)]||'Not set'}
+  function updateSummary(){const src=activeSource(),tgt=resolvedTarget();els.summaryInput.textContent=state.sourceName||'No data loaded';els.summarySub.textContent=state.rows.length?`${state.headers.length} columns detected`:'Paste coordinates or upload a CSV.';els.summaryRows.textContent=String(state.rows.length);els.summarySource.textContent=state.sourceSpecific?shortName(src):(src?typeLabel(crsTypeKey(src)):(state.detection&&state.detection.requiresChoice?'Confirm location':typeLabel(els.fromType.value)));els.summaryTarget.textContent=state.targetSpecific?shortName(tgt):outputLabel();els.summaryX.textContent=state.headers[Number(els.xColumn.value)]||'Not set';els.summaryY.textContent=state.headers[Number(els.yColumn.value)]||'Not set'}
   function updateReady(){const ok=state.rows.length>0&&els.xColumn.value!==''&&els.yColumn.value!==''&&els.xColumn.value!==els.yColumn.value&&!!activeSource()&&!!resolvedTarget();els.convertButton.disabled=!ok;els.readyTitle.textContent=ok?`${state.rows.length} coordinate row${state.rows.length===1?'':'s'} ready to convert.`:(state.detection&&state.detection.requiresChoice&&!activeSource()?'Choose the approximate project location above.':'Add a coordinate table to continue.');els.statusPill.textContent=ok?'Ready':(state.detection&&state.detection.requiresChoice?'Check location':'Waiting')}
   function updateDatumWarning(){const s=activeSource(),t=resolvedTarget();if(s&&t&&s.datum!==t.datum){els.datumWarning.textContent='Datum note: the source and output use different datums. This browser tool does not apply NADCON/NTv2 or time-dependent datum transformation grids. Use ArcGIS Pro with the appropriate geographic transformation when survey-grade or sub-metre datum accuracy matters.';els.datumWarning.classList.remove('hidden')}else els.datumWarning.classList.add('hidden')}
 
@@ -395,20 +442,48 @@
   function toGeographic(x,y,c){if(c.type==='geographic')return [x,y];return inverseTM(x,y,c)}
   function fromGeographic(lon,lat,c){if(c.type==='geographic')return [lon,lat];return forwardTM(lon,lat,c)}
   function num(v){if(typeof v==='number')return v;let s=String(v??'').trim();if(!s)return NaN;s=s.replace(/\s/g,'');if(/^[-+]?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s))s=s.replace(/,/g,'');return Number(s)}
-  function dms(value,isLat){const hemi=value<0?(isLat?'S':'W'):(isLat?'N':'E');let a=Math.abs(value),deg=Math.floor(a),minFloat=(a-deg)*60,min=Math.floor(minFloat),sec=(minFloat-min)*60;return `${deg}° ${String(min).padStart(2,'0')}' ${sec.toFixed(3).padStart(6,'0')}\" ${hemi}`}
-  function outputFieldNames(target){if(target.type==='geographic')return ['Longitude','Latitude'];return ['Converted_Easting','Converted_Northing']}
-  function formatCoord(v,target){return target.type==='geographic'?v.toFixed(8):v.toFixed(3)}
+  function dms(value,isLat){const hemi=value<0?(isLat?'S':'W'):(isLat?'N':'E');let a=Math.abs(value),deg=Math.floor(a),minFloat=(a-deg)*60,min=Math.floor(minFloat),sec=(minFloat-min)*60;return `${deg}° ${String(min).padStart(2,'0')}' ${sec.toFixed(3).padStart(6,'0')}" ${hemi}`}
+  function ddm(value,isLat){const hemi=value<0?(isLat?'S':'W'):(isLat?'N':'E');let a=Math.abs(value),deg=Math.floor(a),minutes=(a-deg)*60;return `${deg}° ${minutes.toFixed(6).padStart(9,'0')}' ${hemi}`}
+  function mgrsBand(lat){if(lat<-80||lat>84)throw new Error('MGRS is only defined between 80°S and 84°N');const bands='CDEFGHJKLMNPQRSTUVWX';return bands[Math.min(19,Math.floor((lat+80)/8))]}
+  function mgrs100k(zone,easting,northing){
+    const colSets=['ABCDEFGH','JKLMNPQR','STUVWXYZ'];const rowLetters='ABCDEFGHJKLMNPQRSTUV';
+    const colNum=Math.floor(easting/100000);if(colNum<1||colNum>8)throw new Error('Coordinate is outside the valid UTM easting range for MGRS');
+    const col=colSets[(zone-1)%3][colNum-1];let rowIndex=Math.floor(northing/100000)%20;if(zone%2===0)rowIndex=(rowIndex+5)%20;return col+rowLetters[rowIndex];
+  }
+  function mgrsParts(lon,lat,precision=5){
+    if(lat<0)throw new Error('This version currently supports MGRS/USNG north of the equator');
+    const zone=utmZoneFor(lon,lat),utm=dynamicWgs84Utm(zone),xy=fromGeographic(lon,lat,utm),band=mgrsBand(lat),sq=mgrs100k(zone,xy[0],xy[1]);
+    const scale=Math.pow(10,5-precision);const e=Math.floor((xy[0]%100000)/scale),n=Math.floor((xy[1]%100000)/scale);return {zone,band,sq,e:String(e).padStart(precision,'0'),n:String(n).padStart(precision,'0')};
+  }
+  function mgrsString(lon,lat){const p=mgrsParts(lon,lat,5);return `${p.zone}${p.band}${p.sq}${p.e}${p.n}`}
+  function usngString(lon,lat){const p=mgrsParts(lon,lat,5);return `${p.zone}${p.band} ${p.sq} ${p.e} ${p.n}`}
+  function outputFieldNames(spec){
+    if(spec.kind==='dd')return ['Longitude_Degrees','Latitude_Degrees'];
+    if(spec.kind==='dms')return ['Longitude_DMS','Latitude_DMS'];
+    if(spec.kind==='ddm')return ['Longitude_DDM','Latitude_DDM'];
+    if(spec.kind==='mgrs')return ['MGRS'];
+    if(spec.kind==='usng')return ['USNG'];
+    const suffix=spec.unit==='Meters'?'Meters':spec.unit==='Feet'?'Feet':'US_Feet';return [`Easting_${suffix}`,`Northing_${suffix}`];
+  }
+  function formatProjected(v,spec){return (v*spec.factor).toFixed(3)}
 
   els.convertButton.onclick=()=>{
-    hideNotice();const src=activeSource(),tgt=resolvedTarget(),xi=Number(els.xColumn.value),yi=Number(els.yColumn.value);if(!src||!tgt||!state.rows.length||xi===yi)return;
-    const names=outputFieldNames(tgt);const headers=[...state.headers,...names];if(tgt.type==='geographic'&&els.includeDms.checked)headers.push('Longitude_DMS','Latitude_DMS');headers.push('Conversion_Error');
-    let errors=0,signCorrections=0;const out=state.rows.map(row=>{let x=num(row[xi]),y=num(row[yi]);let extras=[];let err='';if(!Number.isFinite(x)||!Number.isFinite(y)){err='Invalid coordinate value';errors++}else{try{if(src.type==='geographic'){if(Math.abs(x)>180||Math.abs(y)>90)throw new Error('Geographic input is outside valid longitude/latitude range');const n=normalizeGeographicInput(x,y);x=n.lon;y=n.lat;if(n.corrected)signCorrections++}const ll=toGeographic(x,y,src);if(!Number.isFinite(ll[0])||!Number.isFinite(ll[1])||Math.abs(ll[1])>90)throw new Error('Coordinate could not be transformed');const xy=fromGeographic(ll[0],ll[1],tgt);extras=[formatCoord(xy[0],tgt),formatCoord(xy[1],tgt)];if(tgt.type==='geographic'&&els.includeDms.checked)extras.push(dms(xy[0],false),dms(xy[1],true))}catch(e){err=e.message||'Conversion failed';errors++;extras=['',''];if(tgt.type==='geographic'&&els.includeDms.checked)extras.push('','')}}return [...row,...extras,err]});
+    hideNotice();const src=activeSource(),tgt=resolvedTarget(),spec=outputSpec(),xi=Number(els.xColumn.value),yi=Number(els.yColumn.value);if(!src||!tgt||!state.rows.length||xi===yi)return;
+    const names=outputFieldNames(spec);const headers=[...state.headers,...names,'Conversion_Error'];
+    let errors=0,signCorrections=0;const out=state.rows.map(row=>{let x=num(row[xi]),y=num(row[yi]);let extras=[];let err='';if(!Number.isFinite(x)||!Number.isFinite(y)){err='Invalid coordinate value';errors++;extras=names.map(()=> '')}else{try{if(src.type==='geographic'){if(Math.abs(x)>180||Math.abs(y)>90)throw new Error('Geographic input is outside valid longitude/latitude range');const n=normalizeGeographicInput(x,y);x=n.lon;y=n.lat;if(n.corrected)signCorrections++}const ll=toGeographic(x,y,src);if(!Number.isFinite(ll[0])||!Number.isFinite(ll[1])||Math.abs(ll[1])>90)throw new Error('Coordinate could not be transformed');
+      if(spec.kind==='dd')extras=[ll[0].toFixed(8),ll[1].toFixed(8)];
+      else if(spec.kind==='dms')extras=[dms(ll[0],false),dms(ll[1],true)];
+      else if(spec.kind==='ddm')extras=[ddm(ll[0],false),ddm(ll[1],true)];
+      else if(spec.kind==='mgrs')extras=[mgrsString(ll[0],ll[1])];
+      else if(spec.kind==='usng')extras=[usngString(ll[0],ll[1])];
+      else {const xy=fromGeographic(ll[0],ll[1],tgt);extras=[formatProjected(xy[0],spec),formatProjected(xy[1],spec)]}
+    }catch(e){err=e.message||'Conversion failed';errors++;extras=names.map(()=> '')}}return [...row,...extras,err]});
     state.resultHeaders=headers;state.resultRows=out;renderResults(errors,signCorrections);els.resultsCard.classList.remove('hidden');els.resultsCard.scrollIntoView({behavior:'smooth',block:'start'});els.statusPill.textContent=errors?`${errors} issue${errors===1?'':'s'}`:(signCorrections?`${signCorrections} sign fixed`:'Converted');
   };
   function renderResults(errors,signCorrections=0){let html='<table class="results-table"><thead><tr>'+state.resultHeaders.map(h=>`<th>${escapeHtml(h)}</th>`).join('')+'</tr></thead><tbody>';state.resultRows.forEach(r=>{html+='<tr>'+r.map((v,i)=>`<td${i===r.length-1&&v?' class="result-error"':''}>${escapeHtml(v)}</td>`).join('')+'</tr>'});html+='</tbody></table>';els.resultsWrap.innerHTML=html;if(errors)els.resultsTitle.textContent=`Converted with ${errors} row issue${errors===1?'':'s'}`;else if(signCorrections)els.resultsTitle.textContent=`${state.resultRows.length} row${state.resultRows.length===1?'':'s'} converted · ${signCorrections} longitude sign${signCorrections===1?'':'s'} corrected`;else els.resultsTitle.textContent=`${state.resultRows.length} row${state.resultRows.length===1?'':'s'} converted`}
   function csvEscape(v){const s=String(v??'');return /[",\r\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s}
   function resultCsv(delim=','){return [state.resultHeaders,...state.resultRows].map(r=>r.map(csvEscape).join(delim)).join('\r\n')}
-  els.downloadCsv.onclick=()=>{if(!state.resultRows.length)return;const blob=new Blob(['\uFEFF'+resultCsv()],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;const src=activeSource(),tgt=resolvedTarget();a.download=`Coordinates_${src.code.replace(':','-')}_to_${tgt.code.replace(':','-')}.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)};
+  els.downloadCsv.onclick=()=>{if(!state.resultRows.length)return;const blob=new Blob(['\uFEFF'+resultCsv()],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;const src=activeSource(),tgt=resolvedTarget();a.download=`Coordinates_${src.code.replace(':','-')}_to_${els.toType.value}.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)};
   els.copyResults.onclick=async()=>{if(!state.resultRows.length)return;const tsv=[state.resultHeaders,...state.resultRows].map(r=>r.join('\t')).join('\n');try{await navigator.clipboard.writeText(tsv);const old=els.copyResults.textContent;els.copyResults.textContent='Copied';setTimeout(()=>els.copyResults.textContent=old,1200)}catch{showNotice('Your browser blocked clipboard access. Use Download CSV instead.')}};
 
   refreshSimpleHelp();renderDetection();updateSummary();updateReady();updateDatumWarning();

@@ -1,11 +1,15 @@
-Coordinate System Converter
+Coordinate System Converter - GitHub Pages
 
-GitHub Pages version with a simplified From / To interface.
+Upload index.html to the root of the GitHub Pages repository.
 
-Main workflow:
-1. Paste an Excel table or upload CSV/TXT.
-2. Choose From and To using simple coordinate system families.
-3. Leave From on Detect automatically if the input system is unknown.
-4. Expand Specific types / fix detection only when exact datum, zone, meridian, or column correction is needed.
+Output formats in this version:
+- Alberta 10TM (Meters / Feet / US Feet)
+- Alberta 3TM (Meters / Feet / US Feet)
+- UTM (Meters / Feet / US Feet)
+- Decimal Degrees (Degrees)
+- Degrees Minutes Seconds (Degrees)
+- Degrees Decimal Minutes (Degrees)
+- MGRS
+- US National Grid
 
-All coordinate processing is performed locally in the browser.
+The converter remains location-aware and can automatically correct a missing west/negative longitude sign when the selected expected location supports the correction.
